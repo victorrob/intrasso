@@ -1,4 +1,4 @@
-package com.intrasso.repository;
+package com.intrasso.repository.association;
 
 import com.intrasso.model.Association;
 
@@ -18,6 +18,7 @@ public class AssociationRepositoryCustomImpl implements AssociationRepositoryCus
             Association source = opt.get();
             source.setName(association.getName());
             source.setDescription(association.getDescription());
+            source.setEssais(association.getEssais());
         }
 
     }

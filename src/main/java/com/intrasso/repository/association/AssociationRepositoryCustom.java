@@ -1,4 +1,4 @@
-package com.intrasso.repository;
+package com.intrasso.repository.association;
 
 import com.intrasso.model.Association;
 
