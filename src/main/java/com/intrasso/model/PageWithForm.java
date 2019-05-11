@@ -1,10 +1,12 @@
 package com.intrasso.model;
 
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import java.util.Date;
 
 public abstract class PageWithForm extends Page {
     @OneToOne
+    @JoinColumn
     private Form form;
     private Date endDate;
 

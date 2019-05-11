@@ -1,9 +1,9 @@
 package com.intrasso.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "field")
 public class Field {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

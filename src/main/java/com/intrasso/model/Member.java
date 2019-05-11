@@ -1,8 +1,12 @@
 package com.intrasso.model;
 
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "member")
 public class Member extends AuditModel {
     @ManyToOne
     @JoinColumn

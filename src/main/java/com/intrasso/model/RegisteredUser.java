@@ -1,9 +1,15 @@
 package com.intrasso.model;
 
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-public class RegistredUser extends AuditModel {
+@Entity
+@Table(name = "registeredUser")
+public class RegisteredUser extends AuditModel {
     @OneToOne
+    @JoinColumn
     private Form filledForm;
     private User student;
 

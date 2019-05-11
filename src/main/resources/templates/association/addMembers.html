@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>coucou</p>
+<form action="#" th:action="'/association/' + ${association.getId()}+ '/addMembers'" th:object="${association}"
+      method="post">
+    <label>mail: <input type="email" name="mail"/></label>
+    <label>role:
+        <select name="role">
+            <option value="un poste" selected>un poste</option>
+        </select>
+    </label>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+</form>
+</body>
+</html>

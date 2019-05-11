@@ -1,14 +1,15 @@
 package com.intrasso.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "user")
 public class User extends AuditModel {
-    private int IsepId;
     private String firstName;
     private String lastName;
+    private String mail;
     @OneToMany(
             mappedBy = "student",
             cascade = CascadeType.ALL,
@@ -16,12 +17,11 @@ public class User extends AuditModel {
     )
     private List<Member> members;
 
-    public int getIsepId() {
-        return IsepId;
-    }
+    public User(){
+        this.members = new ArrayList<>();
+        this.firstName = "";
+        this.lastName = "";
 
-    public void setIsepId(int isepId) {
-        IsepId = isepId;
     }
 
     public String getFirstName() {
@@ -40,6 +40,14 @@ public class User extends AuditModel {
         this.lastName = lastName;
     }
 
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
     public List<Member> getMembers() {
         return members;
     }
@@ -51,5 +59,12 @@ public class User extends AuditModel {
     public void addMember(Member member){
         this.members.add(member);
         member.setStudent(this);
+    }
+    
+    public void update(User user){
+        this.setMail(user.getMail());
+        this.setLastName(user.getLastName());
+        this.setFirstName(user.getFirstName());
+        this.setMembers(user.getMembers());
     }
 }

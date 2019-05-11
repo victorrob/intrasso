@@ -5,10 +5,11 @@ import org.hibernate.annotations.OnDelete;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "associations")
+@Table(name = "association")
 public class Association extends Page {
     @OneToMany(
             mappedBy = "association",
@@ -24,6 +25,18 @@ public class Association extends Page {
     private List<Publication> publications;
     @OneToMany
     private List<JobVacancy> jobVacancies;
+
+    public Association() {
+        this.members = new ArrayList<>();
+        this.savedForm = new ArrayList<>();
+        this.events = new ArrayList<>();
+        this.publications = new ArrayList<>();
+        this.jobVacancies = new ArrayList<>();
+    }
+    @SuppressWarnings(value = "all")
+    public Association(Association association){
+        association.update(this);
+    }
 
     public List<Form> getSavedForm() {
         return savedForm;
@@ -80,5 +93,17 @@ public class Association extends Page {
     public void addMember(Member member){
         this.members.add(member);
         member.setAssociation(this);
+    }
+
+    public void update(Object object){
+        if (object instanceof Association) {
+            Association association = (Association) object;
+            association.setName(this.getName());
+            association.setContent(this.getContent());
+            association.setEvents(this.getEvents());
+            association.setJobVacancies(this.getJobVacancies());
+            association.setPublications(this.getPublications());
+            association.setMembers(this.getMembers());
+        }
     }
 }

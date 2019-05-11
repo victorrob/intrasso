@@ -1,15 +1,20 @@
 package com.intrasso.controller;
 
 
-import com.intrasso.repository.association.AssociationRepository;
 import com.intrasso.model.Association;
+import com.intrasso.model.Member;
+import com.intrasso.model.User;
+import com.intrasso.repository.AssociationRepository;
+import com.intrasso.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -17,30 +22,30 @@ public class AssociationController {
 
     @Autowired
     private AssociationRepository associationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/association")
     public String setAssociation(Model model) {
         System.out.println("show asso form");
-        Association association = new Association();
-        model.addAttribute("association", association);
-        return "association";
+        model.addAttribute("association", new Association());
+        return "association/association";
     }
 
 
     @PostMapping("/association")
     public String createAssociation(@ModelAttribute Association association, HttpServletRequest request) {
         System.out.println("get asso form");
-        association = associationRepository.saveOrUpdate(association);
         if (association != null){
             System.out.println("asso created or updated");
-            association = associationRepository.saveOrUpdate(association);
+            association = associationRepository.save(association);
             return "redirect:/association/"+ association.getId();
         }
 
         return "";
     }
 
-    @RequestMapping(value = "/association/{associationId:\\d+}", method = RequestMethod.GET)
+    @GetMapping("/association/{associationId:\\d+}")
     public String getAssociation(@PathVariable("associationId") long associationId, Model model){
         System.out.println("looking for association");
         Optional<Association> opt = associationRepository.findById(associationId);
@@ -48,10 +53,34 @@ public class AssociationController {
             System.out.println("association found");
             Association association = opt.get();
             model.addAttribute("association", association);
-            return "result";
+            return "association/result";
         }
         System.out.println("association not found");
         // TODO no association page
         return "redirect:/association";
+    }
+
+    @GetMapping("/association/{associationId:\\d+}/addMembers")
+    public String addMember(Model model, @PathVariable("associationId") long associationId){
+        System.out.println("asso found : " + associationRepository.getOne(associationId));
+        model.addAttribute("association", associationRepository.getOne(associationId));
+//        model.addAttribute("associationId", associationId);
+        return "association/addMembers";
+    }
+
+    @PostMapping("/association/{associationId:\\d+}/addMembers")
+    public String registerMember(@PathVariable("associationId") long associationId, HttpServletRequest request){
+        Member member = new Member();
+        member.setRole(request.getParameter("role"));
+
+        User user = userRepository.findByMail(request.getParameter("mail")).get(0);
+        user.addMember(member);
+        userRepository.save(user);
+
+        Association association = associationRepository.getOne(associationId);
+        association.addMember(member);
+        associationRepository.getOne(associationId).addMember(member);
+        associationRepository.save(association);
+        return "redirect:/association/" + associationId;
     }
 }
