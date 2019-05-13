@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Events</title>
+</head>
+<body>
+<th:block th:if="${association != null}">
+    <p th:text="'    Liste des événements de ' + ${association.getName()}"></p>
+</th:block>
+<th:block th:each="event: ${events}">
+    <div>
+        <h3 th:text="${event.getName()}"></h3>
+        <p th:text="${event.getContent()}"></p>
+        <p th:text="${event.getEndDate()}"></p>
+        <a th:href="'/association/' + ${event.getAssociation().getId()} + '/events/' + ${event.getId()}">Plus de détails</a>
+    </div>
+</th:block>
+</body>
+</html>

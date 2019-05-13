@@ -25,15 +25,15 @@ public class AssociationController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/association")
+    @GetMapping("/addAssociation")
     public String setAssociation(Model model) {
         System.out.println("show asso form");
         model.addAttribute("association", new Association());
-        return "association/association";
+        return "association/addAssociation";
     }
 
 
-    @PostMapping("/association")
+    @PostMapping("/addAssociation")
     public String createAssociation(@ModelAttribute Association association, HttpServletRequest request) {
         System.out.println("get asso form");
         if (association != null){
@@ -53,18 +53,17 @@ public class AssociationController {
             System.out.println("association found");
             Association association = opt.get();
             model.addAttribute("association", association);
-            return "association/result";
+            return "association/association";
         }
         System.out.println("association not found");
         // TODO no association page
-        return "redirect:/association";
+        return "redirect:/addAssociation";
     }
 
     @GetMapping("/association/{associationId:\\d+}/addMembers")
     public String addMember(Model model, @PathVariable("associationId") long associationId){
         System.out.println("asso found : " + associationRepository.getOne(associationId));
         model.addAttribute("association", associationRepository.getOne(associationId));
-//        model.addAttribute("associationId", associationId);
         return "association/addMembers";
     }
 
@@ -79,7 +78,6 @@ public class AssociationController {
 
         Association association = associationRepository.getOne(associationId);
         association.addMember(member);
-        associationRepository.getOne(associationId).addMember(member);
         associationRepository.save(association);
         return "redirect:/association/" + associationId;
     }

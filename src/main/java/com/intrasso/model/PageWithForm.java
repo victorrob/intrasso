@@ -1,9 +1,11 @@
 package com.intrasso.model;
 
 import javax.persistence.JoinColumn;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import java.util.Date;
 
+@MappedSuperclass
 public abstract class PageWithForm extends Page {
     @OneToOne
     @JoinColumn

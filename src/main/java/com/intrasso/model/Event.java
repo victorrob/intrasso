@@ -1,8 +1,7 @@
 package com.intrasso.model;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -10,6 +9,9 @@ import java.util.List;
 public class Event extends PageWithForm {
     @OneToMany
     private List<RegisteredUser> users;
+    @ManyToOne
+    @JoinColumn
+    private Association association;
 
     public List<RegisteredUser> getUsers() {
         return users;
@@ -17,5 +19,13 @@ public class Event extends PageWithForm {
 
     public void setUsers(List<RegisteredUser> users) {
         this.users = users;
+    }
+
+    public Association getAssociation() {
+        return association;
+    }
+
+    public void setAssociation(Association association) {
+        this.association = association;
     }
 }

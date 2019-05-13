@@ -5,8 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "association")
@@ -19,7 +18,11 @@ public class Association extends Page {
     private List<Member> members;
     @OneToMany
     private List<Form> savedForm;
-    @OneToMany
+    @OneToMany(
+            mappedBy = "association",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private List<Event> events;
     @OneToMany
     private List<Publication> publications;
@@ -33,8 +36,9 @@ public class Association extends Page {
         this.publications = new ArrayList<>();
         this.jobVacancies = new ArrayList<>();
     }
+
     @SuppressWarnings(value = "all")
-    public Association(Association association){
+    public Association(Association association) {
         association.update(this);
     }
 
@@ -50,8 +54,9 @@ public class Association extends Page {
         return events;
     }
 
-    public void addEvent(Event event){
+    public void addEvent(Event event) {
         this.events.add(event);
+        event.setAssociation(this);
     }
 
     public void setEvents(List<Event> events) {
@@ -62,7 +67,7 @@ public class Association extends Page {
         return publications;
     }
 
-    public void addPublication(Publication publication){
+    public void addPublication(Publication publication) {
         this.publications.add(publication);
     }
 
@@ -78,7 +83,7 @@ public class Association extends Page {
         this.jobVacancies = jobVacancies;
     }
 
-    public void addJobVacancy(JobVacancy jobVacancy){
+    public void addJobVacancy(JobVacancy jobVacancy) {
         this.jobVacancies.add(jobVacancy);
     }
 
@@ -90,12 +95,12 @@ public class Association extends Page {
         this.members = members;
     }
 
-    public void addMember(Member member){
+    public void addMember(Member member) {
         this.members.add(member);
         member.setAssociation(this);
     }
 
-    public void update(Object object){
+    public void update(Object object) {
         if (object instanceof Association) {
             Association association = (Association) object;
             association.setName(this.getName());

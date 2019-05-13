@@ -1,15 +1,45 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
-<body>
-<p>coucou</p>
-<form action="/association" th:object="${association}" method="post">
-    <p>Name: <input type="text" th:field="*{name}" /></p>
-    <p>Description: <input type="text" th:field="*{content}" /></p>
-    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
-</form>
+<p>
+<h1>Result</h1>
+<p th:text="'name: ' + ${association.name}"></p>
+<p th:text="'description: ' + ${association.content}"></p>
+<th:block th:if="${association.getEvents().size() > 0}">
+    <P>Evenements</P>
+    <th:block th:each="event: ${association.getEvents()}">
+        <p th:text="'Name: ' + ${event.getName()}"></p>
+        <p th:text="'Description: ' + ${event.getContent()}"></p>
+        <p th:text="'date :' + ${event.getEndDate()}"></p>
+    </th:block>
+</th:block>
+<th:block th:if="${association.getMembers().size() > 0}">
+    <P>Membres</P>
+    <th:block th:each="member: ${association.getMembers()}">
+        <p th:text="'Name: ' + ${member.getStudent().getFirstName()}"></p>
+        <p th:text="'Description: ' + ${member.getRole()}"></p>
+    </th:block>
+</th:block>
+<th:block th:if="${association.getPublications().size() > 0}">
+    <P>Publications</P>
+    <th:block th:each="publication: ${association.getPublications()}">
+        <p th:text="'Title: ' + ${publication.getName()}"></p>
+        <p th:text="'Contenu: ' + ${publication.getContent()}"></p>
+    </th:block>
+</th:block>
+<th:block th:if="${association.getJobVacancies().size() > 0}">
+    <P>Postes à pourvoir</P>
+    <th:block th:each="jobVacancy: ${association.getJobVacancies()}">
+        <p th:text="'Title: ' + ${jobVacancy.getName()}"></p>
+        <p th:text="'Description: ' + ${jobVacancy.getContent()}"></p>
+    </th:block>
+</th:block>
+<a href="/addAssociation">add another association</a>
+<a th:href="'/association/' + ${association.getId()} + '/addMembers'">add members</a>
+<a th:href="'/association/' + ${association.getId()} + '/addEvent'">add event</a>
+<a th:href="'/association/' + ${association.getId()} + '/events'">show event</a>
 </body>
 </html>
