@@ -1,5 +1,7 @@
 package com.intrasso.controller;
 
+import com.intrasso.LDAP.LDAPObject;
+import com.intrasso.LDAP.LDAPaccess;
 import com.intrasso.model.User;
 import com.intrasso.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +22,25 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping("/login")
-    public String createUser(Model model, HttpServletRequest request){
-        String mail = request.getParameter("mail");
+    public String createUser(HttpServletRequest request) {
+        String user = request.getParameter("user");
         String password = request.getParameter("pswd");
-        List<User> userList = userRepository.findByMail(mail);
-        User newUser;
-        if(userList.isEmpty()) {
-            newUser = new User();
-            newUser.setFirstName("john");
-            newUser.setLastName("doe");
-            newUser.setMail(mail);
-            newUser = userRepository.save(newUser);
+        LDAPaccess ldaPaccess = new LDAPaccess();
+        LDAPObject ldapObject;
+        try {
+            ldapObject = ldaPaccess.LDAPget(user, password);
+            System.out.println("log successful");
         }
-        else{
+        catch (Exception e) {
+            e.getCause();
+            return "redirect:/";
+        }
+        List<User> userList = userRepository.findByEmail(ldapObject.getEmail());
+        User newUser;
+        if (userList.isEmpty()) {
+            newUser = new User(ldapObject);
+            newUser = userRepository.save(newUser);
+        } else {
             newUser = userList.get(0);
         }
         HttpSession session = request.getSession();
@@ -41,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public String showUser(Model model, HttpServletRequest request){
+    public String showUser(Model model, HttpServletRequest request) {
         long userId = (long) request.getSession().getAttribute("userId");
         User user = userRepository.getOne(userId);
         model.addAttribute("user", user);

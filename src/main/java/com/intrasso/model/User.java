@@ -1,5 +1,7 @@
 package com.intrasso.model;
 
+import com.intrasso.LDAP.LDAPObject;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,10 @@ import java.util.List;
 public class User extends AuditModel {
     private String firstName;
     private String lastName;
-    private String mail;
+    private String login;
+    private String type;
+    private String number;
+    private String email;
     @OneToMany(
             mappedBy = "student",
             cascade = CascadeType.ALL,
@@ -21,7 +26,19 @@ public class User extends AuditModel {
         this.members = new ArrayList<>();
         this.firstName = "";
         this.lastName = "";
+        this.login = "";
+        this.type = "";
+        this.number = "";
 
+    }
+
+    public User(LDAPObject ldapObject){
+        this.firstName = ldapObject.getPrenom();
+        this.lastName = ldapObject.getNomFamille();
+        this.email = ldapObject.getEmail();
+        this.type = ldapObject.getType();
+        this.number = ldapObject.getNumber();
+        this.login = ldapObject.getLogin();
     }
 
     public String getFirstName() {
@@ -40,12 +57,12 @@ public class User extends AuditModel {
         this.lastName = lastName;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Member> getMembers() {
@@ -60,9 +77,33 @@ public class User extends AuditModel {
         this.members.add(member);
         member.setStudent(this);
     }
-    
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
     public void update(User user){
-        this.setMail(user.getMail());
+        this.setEmail(user.getEmail());
         this.setLastName(user.getLastName());
         this.setFirstName(user.getFirstName());
         this.setMembers(user.getMembers());

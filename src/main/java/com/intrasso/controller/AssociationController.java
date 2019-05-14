@@ -72,7 +72,7 @@ public class AssociationController {
         Member member = new Member();
         member.setRole(request.getParameter("role"));
 
-        User user = userRepository.findByMail(request.getParameter("mail")).get(0);
+        User user = userRepository.findByEmail(request.getParameter("email")).get(0);
         user.addMember(member);
         userRepository.save(user);
 

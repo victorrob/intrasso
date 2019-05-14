@@ -8,6 +8,7 @@
 <h1>Result</h1>
 <p th:text="'prénom: ' + ${user.firstName}"></p>
 <p th:text="'nom: ' + ${user.lastName}"></p>
+<p th:text="'numéro etudiant: ' + ${user.getNumber()}"></p>
 <th:block th:if="${user.getMembers().size() > 0}">
     <P>Membre</P>
     <th:block th:each="member: ${user.getMembers()}">

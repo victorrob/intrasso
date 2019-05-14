@@ -8,7 +8,7 @@
 <p>coucou</p>
 <form action="#" th:action="'/association/' + ${association.getId()}+ '/addMembers'" th:object="${association}"
       method="post">
-    <label>mail: <input type="email" name="mail"/></label>
+    <label>mail: <input type="email" name="email"/></label>
     <label>role:
         <select name="role">
             <option value="un poste" selected>un poste</option>
