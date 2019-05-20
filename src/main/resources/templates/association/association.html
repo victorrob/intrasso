@@ -10,17 +10,15 @@
 <p th:text="'description: ' + ${association.content}"></p>
 <th:block th:if="${association.getEvents().size() > 0}">
     <P>Evenements</P>
-    <th:block th:each="event: ${association.getEvents()}">
-        <p th:text="'Name: ' + ${event.getName()}"></p>
-        <p th:text="'Description: ' + ${event.getContent()}"></p>
-        <p th:text="'date :' + ${event.getEndDate()}"></p>
-    </th:block>
+    <div th:replace="fragments/showPage :: pageAll(formPageObjects=${association.getEvents()}, name='titre de l\'event', content='descr', date='date de l\'event')"></div>
 </th:block>
 <th:block th:if="${association.getMembers().size() > 0}">
     <P>Membres</P>
     <th:block th:each="member: ${association.getMembers()}">
-        <p th:text="'Name: ' + ${member.getStudent().getFirstName()}"></p>
+        <p th:text="'Name: ' + ${member.getUser().getFirstName()}"></p>
         <p th:text="'Description: ' + ${member.getRole()}"></p>
+        <a th:href="'editMember/' + ${member.getId()}">éditer un membre</a>
+        <a th:href="'deleteMember/' + ${member.getId()}">Supprimer un membre</a>
     </th:block>
 </th:block>
 <th:block th:if="${association.getPublications().size() > 0}">
@@ -32,10 +30,7 @@
 </th:block>
 <th:block th:if="${association.getJobVacancies().size() > 0}">
     <P>Postes à pourvoir</P>
-    <th:block th:each="jobVacancy: ${association.getJobVacancies()}">
-        <p th:text="'Title: ' + ${jobVacancy.getName()}"></p>
-        <p th:text="'Description: ' + ${jobVacancy.getContent()}"></p>
-    </th:block>
+<!--    <div th:replace="fragments/showPage :: pageAll(${association.getJobVacancies()}, 'titre', 'descr', 'date')"></div>-->
 </th:block>
 <a href="/addAssociation">add another association</a>
 <a th:href="'/association/' + ${association.getId()} + '/addMembers'">add members</a>

@@ -11,7 +11,7 @@ public class RegisteredUser extends AuditModel {
     @OneToOne
     @JoinColumn
     private Form filledForm;
-    private User student;
+    private User user;
 
     public Form getFilledForm() {
         return filledForm;
@@ -21,11 +21,11 @@ public class RegisteredUser extends AuditModel {
         this.filledForm = filledForm;
     }
 
-    public User getStudent() {
-        return student;
+    public User getUser() {
+        return user;
     }
 
-    public void setStudent(User student) {
-        this.student = student;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

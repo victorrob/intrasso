@@ -16,7 +16,7 @@ public class User extends AuditModel {
     private String number;
     private String email;
     @OneToMany(
-            mappedBy = "student",
+            mappedBy = "user",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
@@ -33,6 +33,7 @@ public class User extends AuditModel {
     }
 
     public User(LDAPObject ldapObject){
+        this.members = new ArrayList<>();
         this.firstName = ldapObject.getPrenom();
         this.lastName = ldapObject.getNomFamille();
         this.email = ldapObject.getEmail();
@@ -75,7 +76,7 @@ public class User extends AuditModel {
 
     public void addMember(Member member){
         this.members.add(member);
-        member.setStudent(this);
+        member.setUser(this);
     }
 
     public String getLogin() {

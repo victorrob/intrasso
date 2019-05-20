@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>coucou</p>
+<form action="#" th:action="'/association/' + ${association.getId()}+ '/addMember'" th:object="${member}"
+      method="post">
+    <th:block th:with="existingUser=*{getId() != null}">
+        <p th:if="${existingUser}" th:text="*{getUser().getEmail()}"></p>
+        <label th:unless="${existingUser}">mail:
+            <input type="email" name="email"/>
+        </label>
+<!--        <p th:if="${existingUser}" th:text="*{getRole()}"></p>-->
+        <label>role:
+            <input type="text" name="role" th:value="*{getRole()}">
+        </label>
+    </th:block>
+    <label>Peux éditer des publications: <input type="checkbox" name="editPublication"
+                                                th:checked="*{canEditPublication()}"></label>
+    <label>Peux éditer des événements: <input type="checkbox" name="editEvent" th:checked="*{canEditEvent()}"></label>
+    <label>Peux éditer des offres de poste: <input type="checkbox" name="editJobVacancy"
+                                                   th:checked="*{canEditJobVacancy()}"></label>
+    <label>Peux gérer les membres: <input type="checkbox" name="manageMembers"
+                                          th:checked="*{canManageMembers()}"></label>
+    <label>Peux accepter des nouveaux de membres: <input type="checkbox" name="acceptMembers"
+                                                         th:checked="*{canAcceptMembers()}"></label>
+    <label>Peux la page de l'association: <input type="checkbox" name="editAssociation"
+                                                 th:checked="*{canEditAssociation()}"></label>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+</form>
+</body>
+</html>
