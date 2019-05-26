@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/homePage.css}"/>
+    <link rel="stylesheet" th:href="@{/css/association/showAssociation.css}"/>
+</head>
+<body>
+<div th:replace="fragments/header"></div>
+<h1 th:text="${association.name}"></h1>
+<p class="description" th:text="${association.content}"></p>
+<div id="dashboard" class="d-flex justify-content-around flex-wrap">
+    <div id="events" class="cardGroup">
+        <h4>Événements : <a class="addLink" th:href="${association.getId()} + '/addEvent'"><i class="fas fa-plus"></i></a> </h4>
+        <div th:replace="fragments/showPage :: pageAll(${events}, 'Le ', 'events', 'dd/MM/yy à hh:mm')"></div>
+    </div>
+    <div id="publications" class="cardGroup">
+        <h4>Publications : <a class="addLink" th:href="${association.getId()} + '/addPublication'"><i class="fas fa-plus"></i></a></h4>
+        <div th:replace="fragments/showPage :: pageAll(${publications}, 'Posté le ', 'publication', 'dd/MM/YY')"></div>
+    </div>
+    <div id="jobVacancies" class="cardGroup">
+        <h4>Postes vacants : <a class="addLink" th:href="${association.getId()} + '/addJobVacancy'"><i class="fas fa-plus"></i></a></h4>
+        <div th:replace="fragments/showPage :: pageAll(${jobVacancies}, 'Jusqu\'au ', 'jobVacancies', 'dd/MM/yy à hh:mm')"></div>
+    </div>
+</div>
+<th:block th:if="${association.getMembers().size() > 0}">
+    <P>Membres</P>
+    <th:block th:each="member: ${association.getMembers()}">
+        <p th:text="'Name: ' + ${member.getUser().getFirstName()}"></p>
+        <p th:text="'Description: ' + ${member.getRole()}"></p>
+        <a th:href="'editMember/' + ${member.getId()}">éditer un membre</a>
+        <a th:href="'deleteMember/' + ${member.getId()}">Supprimer un membre</a>
+    </th:block>
+</th:block>
+</body>
+</html>

@@ -1,7 +1,9 @@
 package com.intrasso.controller;
 
 
+import com.intrasso.Util;
 import com.intrasso.model.Association;
+import com.intrasso.model.Event;
 import com.intrasso.model.Member;
 import com.intrasso.model.User;
 import com.intrasso.repository.AssociationRepository;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -56,7 +59,14 @@ public class AssociationController {
             System.out.println("association found");
             Association association = opt.get();
             model.addAttribute("association", association);
-            return "association/association";
+            int numberDisplayed = 3;
+            List<Event> eventList = Util.getSome(Util.getObjects(associationRepository, "events", associationId), numberDisplayed);
+            model.addAttribute("events", eventList);
+            List<Event> publicationList = Util.getSome(Util.getObjects(associationRepository, "publications", associationId), numberDisplayed);
+            model.addAttribute("publications", publicationList);
+            List<Event> jobVacancyList = Util.getSome(Util.getObjects(associationRepository, "jobVacancies", associationId), numberDisplayed);
+            model.addAttribute("jobVacancies", jobVacancyList);
+            return "association/showAssociation";
         }
         System.out.println("association not found");
         // TODO no association page

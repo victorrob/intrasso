@@ -9,7 +9,7 @@
     <div class="bigCard" th:each="formPageObject: ${formPageObjects}" th:with="cond = ${date == ''}">
         <h5 class="card-title" th:text="${formPageObject.getName()}"></h5>
         <div class="card">
-        <p class="card-text" th:text="${formPageObject.getContent()}"></p>
+        <p class="card-text" th:text="${formPageObject.getContent(300)}"></p>
         <div class="cardFooter">
             <div th:if="${date!=''}">
                 <p class="card-text" th:text="${date} + ${formPageObject.getEndDateString(dateFormat)}"></p>

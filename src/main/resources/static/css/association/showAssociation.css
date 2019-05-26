@@ -1,0 +1,14 @@
+h1{
+    text-align: center;
+    margin: 1rem;
+}
+
+.description{
+    width: 80%;
+    margin: 1rem auto;
+}
+
+i.fa-plus{
+    float: right;
+    color: darkred;
+}
