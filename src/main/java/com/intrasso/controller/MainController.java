@@ -3,7 +3,6 @@ package com.intrasso.controller;
 import com.intrasso.Util;
 import com.intrasso.model.Event;
 import com.intrasso.repository.AssociationRepository;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

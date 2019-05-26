@@ -5,14 +5,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<div th:fragment="pageAll(formPageObjects, name, content, date, type)">
-    <div class="card" th:each="formPageObject: ${formPageObjects}" th:with="cond = ${date == ''}">
-        <h5 class="card-title" th:text="${name} + ' : ' + ${formPageObject.getName()}"></h5>
-        <p class="card-text" th:text="${content} + ' : ' + ${formPageObject.getContent()}"></p>
-        <div th:if="${date!=''}">
-            <p class="card-text" th:text="${date} + ' : ' + ${formPageObject.getEndDate()}"></p>
+<div th:fragment="pageAll(formPageObjects, date, type, dateFormat)">
+    <div class="bigCard" th:each="formPageObject: ${formPageObjects}" th:with="cond = ${date == ''}">
+        <h5 class="card-title" th:text="${formPageObject.getName()}"></h5>
+        <div class="card">
+        <p class="card-text" th:text="${formPageObject.getContent()}"></p>
+        <div class="cardFooter">
+            <div th:if="${date!=''}">
+                <p class="card-text" th:text="${date} + ${formPageObject.getEndDateString(dateFormat)}"></p>
+            </div>
+            <a class="btn btn-primary"
+               th:href="'/association/' + ${formPageObject.getAssociation().getId()} + '/' + ${type} + '/' + ${formPageObject.getId()}">En
+                savoir plus</a>
+
         </div>
-        <a class="btn btn-primary" th:href="'/association/' + ${formPageObject.getAssociation().getId()} + '/' + ${type} + '/' + ${formPageObject.getId()}">En savoir plus</a>
+        </div>
     </div>
 </div>
 </body>

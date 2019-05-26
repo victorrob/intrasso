@@ -10,15 +10,15 @@
 <div id="dashboard" class="d-flex justify-content-around flex-wrap">
     <div id="events" class="cardGroup">
         <h4>Événements :</h4>
-        <div th:replace="fragments/showPage :: pageAll(${events}, 'Titre', 'Contenu', 'date', 'events')"></div>
+        <div th:replace="fragments/showPage :: pageAll(${events}, 'Le ', 'events', 'dd/MM/yy à hh:mm')"></div>
     </div>
     <div id="publications" class="cardGroup">
         <h4>Publications :</h4>
-        <div th:replace="fragments/showPage :: pageAll(${publications}, 'Titre', 'Contenu', 'date', 'publication')"></div>
+        <div th:replace="fragments/showPage :: pageAll(${publications}, 'Posté le ', 'publication', 'dd/MM/YY')"></div>
     </div>
     <div id="jobVacancies" class="cardGroup">
         <h4>Postes vacants :</h4>
-        <div th:replace="fragments/showPage :: pageAll(${jobVacancies}, 'Titre', 'Contenu', 'date', 'jobVacancies')"></div>
+        <div th:replace="fragments/showPage :: pageAll(${jobVacancies}, 'Jusqu\'au ', 'jobVacancies', 'dd/MM/yy à hh:mm')"></div>
     </div>
 </div>
 </body>

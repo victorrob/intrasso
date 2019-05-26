@@ -34,6 +34,10 @@ public class Interceptor extends HandlerInterceptorAdapter {
         URL url = new URL(request.getRequestURL().toString());
         System.out.println(url.getPath());
         HttpSession session = request.getSession();
+        Pattern pattern = Pattern.compile("/(?:css|img)/.*");
+        if(pattern.matcher(url.getPath()).matches()){
+            return super.preHandle(request, response, handler);
+        }
         if (!url.getPath().equals("/index.html") && !url.getPath().equals("/login")) {
             if (session == null) {
                 System.out.println("no session");
@@ -51,7 +55,7 @@ public class Interceptor extends HandlerInterceptorAdapter {
                 response.sendRedirect("/");
                 return true;
             }
-            Pattern pattern = Pattern.compile("/(\\w+)/(\\d+)/(?:(?:add|edit|delete)(Member|Event|Publication|JobVacancy))");
+            pattern = Pattern.compile("/(\\w+)/(\\d+)/(?:(?:add|edit|delete)(Member|Event|Publication|JobVacancy))");
             Matcher matcher = pattern.matcher(url.getPath());
             if (matcher.find()) {
                 System.out.println(matcher.group(1));

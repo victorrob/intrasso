@@ -1,0 +1,19 @@
+.loginBlock {
+    width: 30rem;
+    margin: 1rem auto;
+    border-radius: 1rem;
+    padding: 0.8rem;
+}
+
+.loginBlock img{
+    display: block;
+    margin: auto;
+}
+.loginBlock label {
+    color: rgba(255, 255, 255, .75);
+}
+
+.btn{
+    margin: 0.7rem auto;
+    display: block;
+}

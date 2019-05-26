@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel="stylesheet" href="/css/index.css"/>
     <title>Title</title>
 </head>
 <body>
-<p>hello world</p>
-<form action="/login" method="post">
-<label>
-    mail
-    <input type="text" name="user">
-    <input type="password" name="pswd">
-</label>
-    <input type="submit">
-</form>
-<a href="/association">ici</a>
+<div class="loginBlock bg-dark">
+    <img alt="logo" id="logo" src="/img/logo.png">
+    <form action="/login" method="post">
+        <label for="userName">Nom d'utilisateur :</label>
+        <input id="userName" type="text" name="user" class="form-control">
+        <label for="password">Mot de passe :</label>
+        <input id="password" type="password" name="pswd" class="form-control">
+        <input class="btn btn-light" type="submit">
+    </form>
+</div>
 </body>
 </html>
