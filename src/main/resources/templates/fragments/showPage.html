@@ -9,16 +9,19 @@
     <div class="bigCard" th:each="formPageObject: ${formPageObjects}" th:with="cond = ${date == ''}">
         <h5 class="card-title" th:text="${formPageObject.getName()}"></h5>
         <div class="card">
-        <p class="card-text" th:text="${formPageObject.getContent(300)}"></p>
-        <div class="cardFooter">
-            <div th:if="${date!=''}">
-                <p class="card-text" th:text="${date} + ${formPageObject.getEndDateString(dateFormat)}"></p>
-            </div>
-            <a class="btn btn-primary"
-               th:href="'/association/' + ${formPageObject.getAssociation().getId()} + '/' + ${type} + '/' + ${formPageObject.getId()}">En
-                savoir plus</a>
+            <p class="card-text" th:text="${formPageObject.getContent(300)}"></p>
+            <div class="cardFooter">
+                <div th:if="${date!=''}">
+                    <p class="card-text" th:text="${date} + ${formPageObject.getEndDateString(dateFormat)}"></p>
+                </div>
 
-        </div>
+                <a th:if="${type != ''}" class="btn btn-primary"
+                   th:href="'/association/' + ${formPageObject.getAssociation().getId()} + '/' + ${type} + '/' + ${formPageObject.getId()}">En
+                    savoir plus</a>
+                <a th:if="${type == ''}" class="btn btn-primary ml-auto"
+                   th:href="'/association/' + ${formPageObject.getId()}">En savoir plus</a>
+
+            </div>
         </div>
     </div>
 </div>

@@ -51,6 +51,12 @@ public class AssociationController {
         return "";
     }
 
+    @GetMapping("/associations")
+    public String showAllAssociations(Model model){
+        model.addAttribute("associations", associationRepository.findAll());
+        return "association/associations";
+    }
+
     @GetMapping("/association/{associationId:\\d+}")
     public String getAssociation(@PathVariable("associationId") long associationId, Model model){
         System.out.println("looking for association");

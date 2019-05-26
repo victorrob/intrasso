@@ -8,6 +8,8 @@
 <body>
 <div th:replace="fragments/header"></div>
 
+<div th:replace="fragments/header"></div>
+
 <th:block th:if="${association != null}">
     <h4 th:text="'Liste des événements de ' + ${association.getName()}"></h4>
 </th:block>

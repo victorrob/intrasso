@@ -6,8 +6,9 @@
 </head>
 <body>
 <div th:fragment="formPage">
-        <label>Name: <input type="text" name="name" id="name"/></label>
-        <label>Description: <input type="text" name="content" id="content"/></label>
+    <label for="titleInput">Titre: </label><input id="titleInput" type="text" class="form-control" name="name"/>
+    <label for="textareaInput">Description: </label><textarea class="form-control" name="content"
+                                                              id="textareaInput"></textarea>
 </div>
 </body>
 </html>

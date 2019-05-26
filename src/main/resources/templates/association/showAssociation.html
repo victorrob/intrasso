@@ -24,14 +24,14 @@
         <div th:replace="fragments/showPage :: pageAll(${jobVacancies}, 'Jusqu\'au ', 'jobVacancies', 'dd/MM/yy à hh:mm')"></div>
     </div>
 </div>
-<th:block th:if="${association.getMembers().size() > 0}">
-    <P>Membres</P>
-    <th:block th:each="member: ${association.getMembers()}">
-        <p th:text="'Name: ' + ${member.getUser().getFirstName()}"></p>
-        <p th:text="'Description: ' + ${member.getRole()}"></p>
-        <a th:href="'editMember/' + ${member.getId()}">éditer un membre</a>
-        <a th:href="'deleteMember/' + ${member.getId()}">Supprimer un membre</a>
-    </th:block>
-</th:block>
+<!--<th:block th:if="${association.getMembers().size() > 0}">-->
+<!--    <P>Membres</P>-->
+<!--    <th:block th:each="member: ${association.getMembers()}">-->
+<!--        <p th:text="'Name: ' + ${member.getUser().getFirstName()}"></p>-->
+<!--        <p th:text="'Description: ' + ${member.getRole()}"></p>-->
+<!--        <a th:href="'editMember/' + ${member.getId()}">éditer un membre</a>-->
+<!--        <a th:href="'deleteMember/' + ${member.getId()}">Supprimer un membre</a>-->
+<!--    </th:block>-->
+<!--</th:block>-->
 </body>
 </html>

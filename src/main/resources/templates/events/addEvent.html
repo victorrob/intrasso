@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/events/adddEvent.css}">
 </head>
 <body>
-<p>coucou</p>
-<form th:action="'/association/'+ ${association.getId()} + '/addEvent'" method="post">
-    <div th:replace="fragments/formPageWithForm :: formPageWithForm"></div>
+<div th:replace="fragments/header"></div>
+<h1 class="mx-auto my-1">Créer un événement :</h1>
+<div class="formBlock mx-auto w-75">
+    <form th:action="'/association/'+ ${association.getId()} + '/addEvent'" method="post">
+        <div th:replace="fragments/formPageWithForm :: formPageWithForm"></div>
 
-    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
-</form>
+        <p><input class="form-control" type="submit" value="Submit"/></p>
+    </form>
+</div>
 </body>
 </html>
