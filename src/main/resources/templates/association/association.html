@@ -23,14 +23,12 @@
 </th:block>
 <th:block th:if="${association.getPublications().size() > 0}">
     <P>Publications</P>
-    <th:block th:each="publication: ${association.getPublications()}">
-        <p th:text="'Title: ' + ${publication.getName()}"></p>
-        <p th:text="'Contenu: ' + ${publication.getContent()}"></p>
-    </th:block>
+    <div th:replace="fragments/showPage :: pageAll(${association.getPublications()}, 'titre de la publication', 'descr', 'date de l\'event')"></div>
+
 </th:block>
 <th:block th:if="${association.getJobVacancies().size() > 0}">
     <P>Postes à pourvoir</P>
-<!--    <div th:replace="fragments/showPage :: pageAll(${association.getJobVacancies()}, 'titre', 'descr', 'date')"></div>-->
+    <div th:replace="fragments/showPage :: pageAll(${association.getJobVacancies()}, 'titre', 'descr', 'date')"></div>
 </th:block>
 <a href="/addAssociation">add another association</a>
 <a th:href="'/association/' + ${association.getId()} + '/addMembers'">add members</a>

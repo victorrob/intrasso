@@ -8,6 +8,7 @@
 <th:block th:if="${association != null}">
     <p th:text="'    Liste des événements de ' + ${association.getName()}"></p>
 </th:block>
+
 <th:block th:each="event: ${events}">
     <div>
         <h3 th:text="${event.getName()}"></h3>
