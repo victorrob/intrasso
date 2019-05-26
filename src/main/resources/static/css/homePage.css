@@ -1,0 +1,18 @@
+.card{
+    margin: 1rem 0;
+    padding: 1rem;
+}
+
+.card .btn{
+    width: fit-content;
+    width: -moz-fit-content;
+}
+
+.cardGroup{
+    width: 30rem;
+    margin: 1rem;
+}
+
+.dashboard{
+    margin-top: 1rem;
+}

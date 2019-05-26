@@ -50,6 +50,14 @@ public class Util {
     public static <P extends AuditModel> Queue<P> getObjects(AssociationRepository repository, String type) {
         return Util.getObjects(repository, type, null, -1);
     }
+
+    public static <P> List<P> getSome(Queue<P> queue, int size){
+        List<P> newList = new ArrayList<>();
+        while (size-- > 0 && queue.size() > 0){
+            newList.add(0, queue.poll());
+        }
+        return newList;
+    }
 }
 
 

@@ -48,7 +48,7 @@ public class UserController {
         }
         HttpSession session = request.getSession();
         session.setAttribute("userId", newUser.getId());
-        return "redirect:/user";
+        return "redirect:/home";
     }
 
     @GetMapping("/user")

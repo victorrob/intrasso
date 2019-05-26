@@ -5,25 +5,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<div th:fragment="fuck">fuck it</div>
-<div th:fragment="pageNotForm(formPageObject, name, content)">
-    <p th:text="${name} + ' : ' + ${formPageObject.getName()}"></p>
-    <p th:text="${content} + ' : ' + ${formPageObject.getContent()}"></p>
-</div>
-
-<div th:fragment="pageForm (formPageObject, name, content, date)">
-    <div th:replace="fragments/showPage :: pageNotForm(formPageObject=${formPageObject}, name=${name}, content=${content})"></div>
-    <p th:text="${date} + ' : ' + ${formPageObject.getEndDate()}"></p>
-</div>
-
-<div th:fragment="pageAll(formPageObjects, name, content, date)">
-    <div style="border: black 1px solid" th:each="formPageObject: ${formPageObjects}" th:with="cond = ${date == ''}">
-        <div th:if="${date==''}">
-            <div th:replace="fragments/showPage :: pageNotForm (formPageObject=${formPageObject}, name=${name}, content=${content})"></div>
-        </div>
+<div th:fragment="pageAll(formPageObjects, name, content, date, type)">
+    <div class="card" th:each="formPageObject: ${formPageObjects}" th:with="cond = ${date == ''}">
+        <h5 class="card-title" th:text="${name} + ' : ' + ${formPageObject.getName()}"></h5>
+        <p class="card-text" th:text="${content} + ' : ' + ${formPageObject.getContent()}"></p>
         <div th:if="${date!=''}">
-            <div th:replace="fragments/showPage :: pageForm (formPageObject=${formPageObject}, name=${name}, content=${content}, date=${date})"></div>
+            <p class="card-text" th:text="${date} + ' : ' + ${formPageObject.getEndDate()}"></p>
         </div>
+        <a class="btn btn-primary" th:href="'/association/' + ${formPageObject.getAssociation().getId()} + '/' + ${type} + '/' + ${formPageObject.getId()}">En savoir plus</a>
     </div>
 </div>
 </body>
