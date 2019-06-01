@@ -2,6 +2,8 @@ package com.intrasso.model;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import java.util.HashMap;
+import java.util.Map;
 
 @MappedSuperclass
 public abstract class Page extends AuditModel {
@@ -22,11 +24,15 @@ public abstract class Page extends AuditModel {
     }
 
     public String getContent(int size){
-        System.out.println("size1 : " + size);
         size = (size > content.length()) ? content.length() : size;
-        System.out.println("lenght : " + content.length());
-        System.out.println("size : " + size);
         return content.substring(0, size) + "...";
+    }
+
+    public Map<String, String> getAsMap(){
+        Map<String, String> dataMap = new HashMap<>();
+        dataMap.put("name", this.name);
+        dataMap.put("content", this.content);
+        return dataMap;
     }
 
     public void setContent(String description) {

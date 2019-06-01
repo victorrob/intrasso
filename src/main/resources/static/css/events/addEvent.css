@@ -2,3 +2,8 @@
 /*    width: fit-content;*/
 /*    width: -moz-fit-content;*/
 /*}*/
+
+h1 {
+    width: fit-content;
+    width: -moz-fit-content;
+}

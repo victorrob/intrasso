@@ -1,0 +1,9 @@
+#checkboxDiv{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+form{
+    width: 80%;
+    margin: 1rem auto;
+}

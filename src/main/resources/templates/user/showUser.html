@@ -1,22 +1,31 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Getting Started: Handling Form Submission</title>
+    <title th:text="${user.getFirstName()}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/user/showUser.css}">
+    <link rel="stylesheet" th:href="@{/css/homePage.css}">
 </head>
-<p>
-<h1>Result</h1>
-<p th:text="'prénom: ' + ${user.firstName}"></p>
-<p th:text="'nom: ' + ${user.lastName}"></p>
-<p th:text="'numéro etudiant: ' + ${user.getNumber()}"></p>
-<th:block th:if="${user.getMembers().size() > 0}">
-    <P>Membre</P>
-    <th:block th:each="member: ${user.getMembers()}">
-        <p th:text="'Name: ' + ${member.getAssociation().getName()}"></p>
-        <p th:text="'Description: ' + ${member.getRole()}"></p>
-    </th:block>
-</th:block>
+<body>
+<div th:replace="fragments/header"></div>
+<h1 class="mx-auto my-1" th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></h1>
+<h3 class="mx-auto my-1" th:text="'numéro etudiant: ' + ${user.getNumber()}"></h3>
+<div class="mx-auto my-1 w-75" th:if="${user.getMembers().size() > 0}">
+    <P>Mes associations : </P>
+        <div class="bigCard" th:each="member: ${user.getMembers()}">
+            <h5 class="card-title" th:text="${member.getAssociation().getName()} + ', rôle : '  + ${member.getRole()}"></h5>
+            <div class="card">
 
-<a href="/addAssociation">add another association</a>
+                <p class="card-text" th:text="${member.getAssociation().getContent(300)}"></p>
+                <div class="cardFooter">
+                    <a class="btn btn-primary ml-auto"
+                       th:href="'/association/' + ${member.getAssociation().getId()}">En savoir plus</a>
+
+                </div>
+            </div>
+        </div>
+</div>
+
+<a class="mx-auto d-block" href="/addAssociation">Ajouter une association</a>
 </body>
 </html>

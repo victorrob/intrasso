@@ -32,8 +32,15 @@ public class EventController {
 
     @GetMapping("/association/{associationId:\\d+}/addEvent")
     public String setAssociation(Model model, @PathVariable long associationId) {
-        System.out.println("show events form");
         model.addAttribute("event", new Event());
+        model.addAttribute("association", associationRepository.getOne(associationId));
+        return "events/addEvent";
+    }
+
+    @GetMapping("/association/{associationId:\\d+}/editEvent/{eventId:\\d+}")
+    public String editAssociation(Model model, @PathVariable long associationId, @PathVariable long eventId, HttpServletRequest request) {
+        request.getSession().setAttribute("eventId", eventId);
+        model.addAttribute("event", eventRepository.getOne(eventId));
         model.addAttribute("association", associationRepository.getOne(associationId));
         return "events/addEvent";
     }
@@ -42,28 +49,34 @@ public class EventController {
     @PostMapping("/association/{associationId:\\d+}/addEvent")
     public String createEvent(@ModelAttribute Event event, @PathVariable long associationId, HttpServletRequest request) {
         System.out.println("get events form");
+        long eventId = (long) request.getSession().getAttribute("eventId");
+        if (event == null) {
+            request.getSession().removeAttribute("eventId");
+            eventRepository.getOne(eventId).update(event);
+            return "";
+        }
+        Association association = associationRepository.getOne(associationId);
 
-        if (event != null) {
-            String dateString = request.getParameter("endDateString");
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            try {
-                date = df.parse(dateString);
-            }
-            catch (java.text.ParseException e){
-                System.out.println("aie");
-            }
-            System.out.println("date = " + date.toString());
-            event.setEndDate(date);
-            Association association = associationRepository.getOne(associationId);
-            association.addEvent(event);
-//            eventRepository.save(events);
-            associationRepository.save(association);
-            System.out.println("events created");
+        if (event.getId() != null) {
+            System.out.println("update");
+            eventRepository.save(event);
             return "redirect:/association/" + association.getId();
         }
-
-        return "";
+        String dateString = request.getParameter("endDateString");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        try {
+            date = df.parse(dateString);
+        } catch (java.text.ParseException e) {
+            System.out.println("aie");
+        }
+        System.out.println("date = " + date.toString());
+        event.setEndDate(date);
+        association.addEvent(event);
+//            eventRepository.save(events);
+        associationRepository.save(association);
+        System.out.println("events created");
+        return "redirect:/association/" + association.getId();
     }
 
 

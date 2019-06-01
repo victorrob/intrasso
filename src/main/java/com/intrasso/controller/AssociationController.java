@@ -7,6 +7,7 @@ import com.intrasso.model.Event;
 import com.intrasso.model.Member;
 import com.intrasso.model.User;
 import com.intrasso.repository.AssociationRepository;
+import com.intrasso.repository.EventRepository;
 import com.intrasso.repository.MemberRepository;
 import com.intrasso.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class AssociationController {
     private UserRepository userRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private EventRepository eventRepository;
 
     @GetMapping("/addAssociation")
     public String setAssociation(Model model) {
@@ -44,7 +47,15 @@ public class AssociationController {
         System.out.println("get asso form");
         if (association != null){
             System.out.println("asso created or updated");
+            User user = userRepository.getOne((Long) request.getSession().getAttribute("userId"));
             association = associationRepository.save(association);
+            Member member = new Member();
+            member.setRole("Président");
+            member.giveAllRights();
+            user.addMember(member);
+            association.addMember(member);
+            memberRepository.save(member);
+            request.getSession().setAttribute("memberMap", Util.getMapMember(user.getMembers()));
             return "redirect:/association/"+ association.getId();
         }
 
@@ -66,12 +77,13 @@ public class AssociationController {
             Association association = opt.get();
             model.addAttribute("association", association);
             int numberDisplayed = 3;
-            List<Event> eventList = Util.getSome(Util.getObjects(associationRepository, "events", associationId), numberDisplayed);
+            List<Event> eventList = Util.getSome(Util.getObjects(associationRepository, "events", associationId), numberDisplayed, eventRepository);
             model.addAttribute("events", eventList);
-            List<Event> publicationList = Util.getSome(Util.getObjects(associationRepository, "publications", associationId), numberDisplayed);
+            List<Event> publicationList = Util.getSome(Util.getObjects(associationRepository, "publications", associationId), numberDisplayed, eventRepository);
             model.addAttribute("publications", publicationList);
-            List<Event> jobVacancyList = Util.getSome(Util.getObjects(associationRepository, "jobVacancies", associationId), numberDisplayed);
+            List<Event> jobVacancyList = Util.getSome(Util.getObjects(associationRepository, "jobVacancies", associationId), numberDisplayed, eventRepository);
             model.addAttribute("jobVacancies", jobVacancyList);
+            model.addAttribute("members", association.getMembers());
             return "association/showAssociation";
         }
         System.out.println("association not found");
@@ -120,6 +132,7 @@ public class AssociationController {
             user.addMember(member);
             association.addMember(member);
             memberRepository.save(member);
+            request.getSession().setAttribute("memberMap", Util.getMapMember(user.getMembers()));
         }
         return "redirect:/association/" + associationId;
     }

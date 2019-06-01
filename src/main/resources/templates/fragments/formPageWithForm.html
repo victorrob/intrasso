@@ -5,9 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-<div th:fragment="formPageWithForm">
+<div th:fragment="formPageWithForm(dataMap)">
     <div th:replace="fragments/formPage:: formPage"></div>
-        <label>Date de fin : <input class="form-control" type="date" name="endDateString" id="endDate"></label>
+    <label>Date de fin : <input class="form-control" type="date" name="endDateString" id="endDate" th:value="${dataMap.get('endDate')}"></label>
 </div>
 </body>
 </html>

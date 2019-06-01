@@ -28,4 +28,17 @@ public class Event extends PageWithForm {
     public void setAssociation(Association association) {
         this.association = association;
     }
+
+    @PreRemove
+    public  void removeFromAssociation(){
+        association.getEvents().remove(this);
+    }
+
+    public void update(Event event){
+        this.setName(event.getName());
+        this.setContent(event.getContent());
+        this.setForm(event.getForm());
+        this.setEndDate(event.getEndDate());
+        this.setUsers(event.getUsers());
+    }
 }

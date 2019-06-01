@@ -121,7 +121,14 @@ public class Member extends AuditModel {
         this.editEvent = request.getParameter("editEvent") != null;
         this.editJobVacancy = request.getParameter("editJobVacancy") != null;
         this.acceptMembers = request.getParameter("acceptMembers") != null;
-        this.acceptMembers = request.getParameter("acceptMembers") != null;
         this.editAssociation = request.getParameter("editAssociation") != null;
+    }
+    
+    public void giveAllRights(){
+        this.editPublication = true;
+        this.editEvent = true;
+        this.editJobVacancy = true;
+        this.acceptMembers = true;
+        this.editAssociation = true;
     }
 }

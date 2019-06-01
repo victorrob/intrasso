@@ -2,6 +2,8 @@ package com.intrasso.controller;
 
 import com.intrasso.LDAP.LDAPObject;
 import com.intrasso.LDAP.LDAPaccess;
+import com.intrasso.Util;
+import com.intrasso.model.Member;
 import com.intrasso.model.User;
 import com.intrasso.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -47,7 +51,10 @@ public class UserController {
             newUser = userList.get(0);
         }
         HttpSession session = request.getSession();
+        session.setAttribute("user", user);
         session.setAttribute("userId", newUser.getId());
+        session.setAttribute("userName", newUser.getFirstName());
+        session.setAttribute("memberMap", Util.getMapMember(newUser.getMembers()));
         return "redirect:/home";
     }
 

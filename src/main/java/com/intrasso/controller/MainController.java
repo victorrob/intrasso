@@ -3,6 +3,7 @@ package com.intrasso.controller;
 import com.intrasso.Util;
 import com.intrasso.model.Event;
 import com.intrasso.repository.AssociationRepository;
+import com.intrasso.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,8 @@ import java.util.Queue;
 public class MainController {
     @Autowired
     private AssociationRepository associationRepository;
+    @Autowired
+    private EventRepository eventRepository;
 
     @GetMapping("/{type:events|publications|jobVacancies}")
     public String showAll(@PathVariable String type, Model model){
@@ -35,11 +38,11 @@ public class MainController {
     @GetMapping("/home")
     public String showHomePag(Model model, HttpServletRequest request){
         int numberDisplayed = 3;
-        List<Event> eventList = Util.getSome(Util.getObjects(associationRepository, "events"), numberDisplayed);
+        List<Event> eventList = Util.getSome(Util.getObjects(associationRepository, "events"), numberDisplayed, eventRepository);
         model.addAttribute("events", eventList);
-        List<Event> publicationList = Util.getSome(Util.getObjects(associationRepository, "publications"), numberDisplayed);
+        List<Event> publicationList = Util.getSome(Util.getObjects(associationRepository, "publications"), numberDisplayed, eventRepository);
         model.addAttribute("publications", publicationList);
-        List<Event> jobVacancyList = Util.getSome(Util.getObjects(associationRepository, "jobVacancies"), numberDisplayed);
+        List<Event> jobVacancyList = Util.getSome(Util.getObjects(associationRepository, "jobVacancies"), numberDisplayed, eventRepository);
         model.addAttribute("jobVacancies", jobVacancyList);
         return "user/homePage";
     }

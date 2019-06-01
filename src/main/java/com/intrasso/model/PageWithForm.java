@@ -5,6 +5,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 @MappedSuperclass
 public abstract class PageWithForm extends Page {
@@ -28,6 +29,18 @@ public abstract class PageWithForm extends Page {
     public String getEndDateString(String dateFormat){
         SimpleDateFormat date = new SimpleDateFormat(dateFormat);
         return date.format(endDate);
+    }
+
+    @Override
+    public Map<String, String> getAsMap(){
+        Map<String, String> dataMap = super.getAsMap();
+        if(endDate == null){
+            dataMap.put("endDate", "");
+            return dataMap;
+        }
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+        dataMap.put("endDate", date.format(endDate));
+        return dataMap;
     }
 
     public void setEndDate(Date endDate) {

@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/association/manageMember.css}">
 </head>
 <body>
-<p>coucou</p>
+<div th:replace="fragments/header"></div>
 <form action="#" th:action="'/association/' + ${association.getId()}+ '/addMember'" th:object="${member}"
       method="post">
     <th:block th:with="existingUser=*{getId() != null}">
+        <label for="email">mail:</label>
         <p th:if="${existingUser}" th:text="*{getUser().getEmail()}"></p>
-        <label th:unless="${existingUser}">mail:
-            <input type="email" name="email"/>
-        </label>
-<!--        <p th:if="${existingUser}" th:text="*{getRole()}"></p>-->
-        <label>role:
-            <input type="text" name="role" th:value="*{getRole()}">
-        </label>
+        <input th:unless="${existingUser}" class="form-control" id="email" type="email" name="email"/>
+        <label for="role">role:</label>
+        <input class="form-control" id="role" type="text" name="role" th:value="*{getRole()}">
     </th:block>
-    <label>Peux éditer des publications: <input type="checkbox" name="editPublication"
-                                                th:checked="*{canEditPublication()}"></label>
-    <label>Peux éditer des événements: <input type="checkbox" name="editEvent" th:checked="*{canEditEvent()}"></label>
-    <label>Peux éditer des offres de poste: <input type="checkbox" name="editJobVacancy"
-                                                   th:checked="*{canEditJobVacancy()}"></label>
-    <label>Peux gérer les membres: <input type="checkbox" name="manageMembers"
-                                          th:checked="*{canManageMembers()}"></label>
-    <label>Peux accepter des nouveaux de membres: <input type="checkbox" name="acceptMembers"
-                                                         th:checked="*{canAcceptMembers()}"></label>
-    <label>Peux la page de l'association: <input type="checkbox" name="editAssociation"
-                                                 th:checked="*{canEditAssociation()}"></label>
-    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+    <div id="checkboxDiv">
+        <label>Peux éditer des publications: <input type="checkbox" name="editPublication"
+                                                    th:checked="*{canEditPublication()}"></label>
+        <label>Peux éditer des événements: <input type="checkbox" name="editEvent"
+                                                  th:checked="*{canEditEvent()}"></label>
+        <label>Peux éditer des offres de poste: <input type="checkbox" name="editJobVacancy"
+                                                       th:checked="*{canEditJobVacancy()}"></label>
+        <label>Peux gérer les membres: <input type="checkbox" name="manageMembers"
+                                              th:checked="*{canManageMembers()}"></label>
+        <label>Peux accepter des nouveaux de membres: <input type="checkbox" name="acceptMembers"
+                                                             th:checked="*{canAcceptMembers()}"></label>
+        <label>Peux la page de l'association: <input type="checkbox" name="editAssociation"
+                                                     th:checked="*{canEditAssociation()}"></label>
+    </div>
+    <p><input class="form-control" type="submit" value="Submit"/></p>
 </form>
 </body>
 </html>

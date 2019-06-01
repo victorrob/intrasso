@@ -6,9 +6,9 @@
 </head>
 <body>
 <div th:fragment="formPage">
-    <label for="titleInput">Titre: </label><input id="titleInput" type="text" class="form-control" name="name"/>
+    <label for="titleInput">Titre: </label><input id="titleInput" type="text" class="form-control" name="name" th:value="${(dataMap == null)} ? '' : ${dataMap.get('name')}"/>
     <label for="textareaInput">Description: </label><textarea class="form-control" name="content"
-                                                              id="textareaInput"></textarea>
+                                                              id="textareaInput" th:text="${(dataMap == null)} ? '' : ${dataMap.get('content')}"></textarea>
 </div>
 </body>
 </html>

@@ -3,6 +3,7 @@
 <head>
     <title>Getting Started: Handling Form Submission</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
     <link rel="stylesheet" th:href="@{/css/homePage.css}"/>
     <link rel="stylesheet" th:href="@{/css/association/showAssociation.css}"/>
 </head>
@@ -22,6 +23,19 @@
     <div id="jobVacancies" class="cardGroup">
         <h4>Postes vacants : <a class="addLink" th:href="${association.getId()} + '/addJobVacancy'"><i class="fas fa-plus"></i></a></h4>
         <div th:replace="fragments/showPage :: pageAll(${jobVacancies}, 'Jusqu\'au ', 'jobVacancies', 'dd/MM/yy à hh:mm')"></div>
+    </div>
+    <div id="members" class="cardGroup">
+        <h4>Membres : <a class="addLink" th:href="${association.getId()} + '/addMember'"><i class="fas fa-plus"></i></a></h4>
+        <div class="bigCard" th:each="member: ${members}">
+            <div class="card">
+                <h5 class="card-title" th:text="${member.getUser().getFirstName()} + '  ' + ${member.getUser().getLastName()} + ', rôle : '  + ${member.getRole()}"></h5>
+                <div class="cardFooter">
+                    <a class="btn btn-danger mr-auto" th:href="'/association/' + ${member.getAssociation().getId()} + '/deleteMember/' + ${member.getId()}">Supprimer</a>
+                    <a class="btn btn-primary ml-auto"
+                       th:href="'/association/' + ${member.getAssociation().getId()} + '/editMember/' + ${member.getId()}">Éditer</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!--<th:block th:if="${association.getMembers().size() > 0}">-->
