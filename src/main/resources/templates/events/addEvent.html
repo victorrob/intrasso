@@ -14,7 +14,7 @@
     <form th:action="'/association/'+ ${association.getId()} + '/addEvent'" method="post">
         <div th:replace="fragments/formPageWithForm :: formPageWithForm(${event.getAsMap()})"></div>
 
-        <p><input class="form-control" type="submit" value="Submit"/></p>
+        <p><input class="form-control btn btn-primary" type="submit" value="Submit"/></p>
     </form>
 </div>
 </body>
