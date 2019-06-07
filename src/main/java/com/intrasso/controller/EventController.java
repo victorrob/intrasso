@@ -49,8 +49,8 @@ public class EventController {
     @PostMapping("/association/{associationId:\\d+}/addEvent")
     public String createEvent(@ModelAttribute Event event, @PathVariable long associationId, HttpServletRequest request) {
         System.out.println("get events form");
-        long eventId = (long) request.getSession().getAttribute("eventId");
-        if (event == null) {
+        if (request.getSession().getAttribute("eventId") != null) {
+            long eventId = (long) request.getSession().getAttribute("eventId");
             request.getSession().removeAttribute("eventId");
             eventRepository.getOne(eventId).update(event);
             return "";

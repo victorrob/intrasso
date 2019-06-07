@@ -25,7 +25,7 @@ public abstract class Page extends AuditModel {
 
     public String getContent(int size){
         size = (size > content.length()) ? content.length() : size;
-        return content.substring(0, size) + "...";
+        return content.substring(0, size) + ((size != content.length()) ? "..." : "");
     }
 
     public Map<String, String> getAsMap(){
