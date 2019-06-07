@@ -1,3 +1,7 @@
 #logo {
     height: 4rem;
 }
+
+.navbar, .navbar-expand-md, .navbar-dark {
+    margin-bottom: 50px;
+}
