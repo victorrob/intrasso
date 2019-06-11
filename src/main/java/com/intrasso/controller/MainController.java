@@ -1,16 +1,22 @@
 package com.intrasso.controller;
 
 import com.intrasso.Util;
-import com.intrasso.model.Event;
+import com.intrasso.model.*;
 import com.intrasso.repository.AssociationRepository;
-import com.intrasso.repository.EventRepository;
+import com.intrasso.repository.FormRepository;
+import com.intrasso.repository.PageWithFormRepository;
+import com.intrasso.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 import java.util.List;
 import java.util.Queue;
 
@@ -19,31 +25,107 @@ public class MainController {
     @Autowired
     private AssociationRepository associationRepository;
     @Autowired
-    private EventRepository eventRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private FormRepository formRepository;
+    @Autowired
+    private PageWithFormRepository pageWithFormRepository;
 
-    @GetMapping("/{type:events|publications|jobVacancies}")
-    public String showAll(@PathVariable String type, Model model){
-        Queue<Event> queue = Util.getObjects(associationRepository, type);
+    @GetMapping("/{type:event|publication|jobVacancy}")
+    public String showAll(@PathVariable String type, Model model) {
+        Queue<PageWithForm> queue = Util.getObjects(associationRepository, type);
         model.addAttribute(type, queue);
         return type + "/" + type;
     }
 
-    @GetMapping("/association/{associationId:\\d+}/{type:events|publications|jobVacancies}")
-    public String showObjects(@PathVariable long associationId, @PathVariable String type, Model model){
-        model.addAttribute(type, Util.getObjects(associationRepository, type,associationId));
+    @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}")
+    public String showObjects(@PathVariable long associationId, @PathVariable String type, Model model) {
+        model.addAttribute(type, Util.getObjects(associationRepository, type, associationId));
         model.addAttribute("association", associationRepository.getOne(associationId));
         return type + "/" + type;
     }
 
+    @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d+}")
+    public String showOneObject(@PathVariable long objectId, @PathVariable String type, Model model) {
+        model.addAttribute(type, pageWithFormRepository.getOne(objectId));
+        return type + "/show" + StringUtils.capitalize(type);
+    }
+
+    @GetMapping("/association/{associationId:\\d+}/{type:add(?:Event|Publication|JobVacancy)}")
+    public String addObject(@PathVariable long associationId, @PathVariable String type, Model model) {
+        return manageObject(associationId, type.replace("add", "edit"), model, -1, null);
+    }
+
+    @GetMapping("/association/{associationId:\\d+}/{type:edit(?:Event|Publication|JobVacancy)}/{objectId:\\d+}")
+    public String editObject(@PathVariable long associationId, @PathVariable String type, Model model, @PathVariable long objectId, HttpServletRequest request) {
+        return manageObject(associationId, type, model, objectId, request);
+    }
+
+    private String manageObject(long associationId, String type, Model model, long objectId, HttpServletRequest request) {
+        boolean edit = objectId != -1;
+        type = type.replaceAll("(edit|add)(\\w+)", "$2");
+        if (edit) {
+            request.getSession().setAttribute("pageWithFormId", objectId);
+        }
+        System.out.println("type = " + type);
+        Association association = associationRepository.getOne(associationId);
+        model.addAttribute("association", association);
+        model.addAttribute(type.toLowerCase(), ((edit) ? pageWithFormRepository.getOne(objectId) : new PageWithForm()));
+        return type.toLowerCase() + "/add" + type;
+    }
+
+    @PostMapping("/association/{associationId:\\d+}/{type:edit(?:Event|Publication|JobVacancy)}")
+    public String editObject(@PathVariable long associationId, HttpServletRequest request, @PathVariable String type) {
+        Association association = associationRepository.getOne(associationId);
+        type = type.replace("edit", "").toLowerCase();
+        if (request.getSession().getAttribute("pageWithFormId") != null) {
+            long objectId = (long) request.getSession().getAttribute("pageWithFormId");
+            request.getSession().removeAttribute("pageWithFormId");
+            pageWithFormRepository.getOne(objectId).update(request);
+            return "redirect:/association/" + association.getId();
+        }
+        PageWithForm pageWithForm = new PageWithForm(request, type);
+        if(request.getParameter("selectName-0") != null){
+            System.out.println("request is not null");
+            Form form = new Form(request);
+            for (Field field : form.getFields()) {
+                System.out.println("type : " + field.getType());
+            }
+            formRepository.save(form);
+            pageWithForm.setForm(form);
+            association.addPageWithForm(pageWithForm);
+        }
+        associationRepository.save(association);
+        return "redirect:/association/" + association.getId();
+    }
+
     @GetMapping("/home")
-    public String showHomePag(Model model, HttpServletRequest request){
+    public String showHomePag(Model model, HttpServletRequest request) {
         int numberDisplayed = 3;
-        List<Event> eventList = Util.getSome(Util.getObjects(associationRepository, "events"), numberDisplayed, eventRepository);
-        model.addAttribute("events", eventList);
-        List<Event> publicationList = Util.getSome(Util.getObjects(associationRepository, "publications"), numberDisplayed, eventRepository);
-        model.addAttribute("publications", publicationList);
-        List<Event> jobVacancyList = Util.getSome(Util.getObjects(associationRepository, "jobVacancies"), numberDisplayed, eventRepository);
-        model.addAttribute("jobVacancies", jobVacancyList);
+        String[] typeList = {"event", "publication", "jobVacancy"};
+        for(String type : typeList){
+            model.addAttribute(type, Util.getSome(Util.getObjects(associationRepository, type), numberDisplayed, pageWithFormRepository));
+        }
         return "user/homePage";
     }
+
+    @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d++}/form/{formId:\\d+}")
+    public String showEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long formId, Model model){
+        model.addAttribute("associationId", associationId);
+        model.addAttribute("type", type);
+        model.addAttribute("form", formRepository.getOne(formId));
+        return "form/showForm";
+    }
+
+    @PostMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d++}/setForm/{formId:\\d+}")
+    public String editEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long formId, HttpServletRequest request){
+        Form form = formRepository.getOne(formId);
+        Form newForm = new Form(request, form);
+        User user = userRepository.getOne((Long)request.getSession().getAttribute("userId"));
+        Candidate candidate = new Candidate(newForm, user);
+        form.getPageWithForm().addCandidate(candidate);
+        formRepository.save(newForm);
+        return "redirect:/association/" + associationId;
+    }
+
 }

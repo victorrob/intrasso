@@ -20,6 +20,12 @@ public class User extends AuditModel {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
+    private List<Candidate> candidateList;
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private List<Member> members;
 
     public User(){

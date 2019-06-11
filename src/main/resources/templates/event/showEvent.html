@@ -13,5 +13,6 @@
     <p th:text="${event.getContent()}"></p>
     <p th:text="'Finis le ' + ${event.getEndDateString('dd/MM/yy à hh:mm')}"></p>
 </div>
+<a th:href="${event.getId()} + '/form/' + ${event.getForm().getId()}"><button class="btn btn-primary">Remplir le formulaire</button></a>
 </body>
 </html>

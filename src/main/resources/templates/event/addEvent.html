@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <link rel="stylesheet" th:href="@{/css/events/addEvent.css}">
+</head>
+<body>
+<div th:replace="fragments/header"></div>
+<h1 class="mx-auto my-1">Créer un événement :</h1>
+<div class="formBlock mx-auto w-75">
+    <form th:action="'/association/'+ ${association.getId()} + '/editEvent'" method="post">
+        <div th:replace="fragments/formPageWithForm :: formPageWithForm(${event.getAsMap()})"></div>
+
+        <p><input class="form-control btn btn-primary" type="submit" value="Submit"/></p>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:fragment="getForm(form)">
+    <div class="my-3" th:each="field : ${form.getFields()}" th:object="${field}">
+        <div th:replace="fragments/input :: input(*{type}, *{inputId}, *{value}, *{label})"></div>
+    </div>
+</th:block>
+</body>
+</html>

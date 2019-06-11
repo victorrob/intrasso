@@ -2,6 +2,7 @@ package com.intrasso.model;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,15 @@ public abstract class Page extends AuditModel {
     private String name;
     @Column(length = 5000)
     private String content;
+
+    public Page(){
+        this.name = "";
+        this.content = "";
+    }
+
+    public Page(HttpServletRequest request){
+        update(request);
+    }
 
     public String getName() {
         return name;
@@ -33,6 +43,20 @@ public abstract class Page extends AuditModel {
         dataMap.put("name", this.name);
         dataMap.put("content", this.content);
         return dataMap;
+    }
+
+    public void update(Object object){
+        if(!(object instanceof Page)){
+            return;
+        }
+        Page page = (Page) object;
+        this.name = page.name;
+        this.content = page.content;
+    }
+
+    public void update(HttpServletRequest request){
+        this.name = request.getParameter("name");
+        this.content = request.getParameter("content");
     }
 
     public void setContent(String description) {

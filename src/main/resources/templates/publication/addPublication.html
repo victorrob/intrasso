@@ -2,17 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Publication</title>
 
 
     <link rel="stylesheet" th:href="@{/css/events/addEvent.css}">
 </head>
 <body>
 <div th:replace="fragments/header"></div>
-<h1 class="mx-auto my-1">Créer un événement :</h1>
+<h1 class="mx-auto my-1">Créer une publication :</h1>
 <div class="formBlock mx-auto w-75">
-    <form th:action="'/association/'+ ${association.getId()} + '/addEvent'" method="post">
-        <div th:replace="fragments/formPageWithForm :: formPageWithForm(${event.getAsMap()})"></div>
+    <form th:action="'/association/'+ ${association.getId()} + '/editPublication'" method="post">
+        <div th:replace="fragments/formPageWithForm :: formPageWithForm(${publication.getAsMap()})"></div>
 
         <p><input class="form-control btn btn-primary" type="submit" value="Submit"/></p>
     </form>

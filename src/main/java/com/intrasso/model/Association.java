@@ -1,5 +1,6 @@
 package com.intrasso.model;
 
+import com.intrasso.repository.PageWithFormRepository;
 import org.hibernate.annotations.OnDelete;
 
 import javax.persistence.*;
@@ -23,18 +24,12 @@ public class Association extends Page {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    private List<Event> events;
-    @OneToMany
-    private List<Publication> publications;
-    @OneToMany
-    private List<JobVacancy> jobVacancies;
+    private List<PageWithForm> pageWithFormList;
 
     public Association() {
         this.members = new ArrayList<>();
         this.savedForm = new ArrayList<>();
-        this.events = new ArrayList<>();
-        this.publications = new ArrayList<>();
-        this.jobVacancies = new ArrayList<>();
+        this.pageWithFormList = new ArrayList<>();
     }
 
     @SuppressWarnings(value = "all")
@@ -50,41 +45,27 @@ public class Association extends Page {
         this.savedForm = savedForm;
     }
 
-    public List<Event> getEvents() {
-        return events;
+    public List<PageWithForm> getPageWithFormList() {
+        return pageWithFormList;
     }
 
-    public void addEvent(Event event) {
-        this.events.add(event);
-        event.setAssociation(this);
+    public void setPageWithFormList(List<PageWithForm> pageWithFormList) {
+        this.pageWithFormList = pageWithFormList;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public List<PageWithForm> getByType(String type){
+        List<PageWithForm> pageWithForms = new ArrayList<>();
+        for(PageWithForm pageWithForm : pageWithFormList){
+            if(pageWithForm.getType().equals(type)){
+                pageWithForms.add(pageWithForm);
+            }
+        }
+        return pageWithForms;
     }
 
-    public List<Publication> getPublications() {
-        return publications;
-    }
-
-    public void addPublication(Publication publication) {
-        this.publications.add(publication);
-    }
-
-    public void setPublications(List<Publication> publications) {
-        this.publications = publications;
-    }
-
-    public List<JobVacancy> getJobVacancies() {
-        return jobVacancies;
-    }
-
-    public void setJobVacancies(List<JobVacancy> jobVacancies) {
-        this.jobVacancies = jobVacancies;
-    }
-
-    public void addJobVacancy(JobVacancy jobVacancy) {
-        this.jobVacancies.add(jobVacancy);
+    public void addPageWithForm(PageWithForm pageWithForm) {
+        this.pageWithFormList.add(pageWithForm);
+        pageWithForm.setAssociation(this);
     }
 
     public List<Member> getMembers() {
@@ -100,14 +81,24 @@ public class Association extends Page {
         member.setAssociation(this);
     }
 
+    public void addMember(User user, String role){
+        for(Member member : members){
+            if(member.getUser().getId().equals(user.getId())){
+                member.setRole(role);
+                return;
+            }
+        }
+        Member member = new Member(user, role);
+        this.members.add(member);
+        member.setAssociation(this);
+    }
+
     public void update(Object object) {
         if (object instanceof Association) {
             Association association = (Association) object;
             association.setName(this.getName());
             association.setContent(this.getContent());
-            association.setEvents(this.getEvents());
-            association.setJobVacancies(this.getJobVacancies());
-            association.setPublications(this.getPublications());
+            association.pageWithFormList = this.pageWithFormList;
             association.setMembers(this.getMembers());
         }
     }

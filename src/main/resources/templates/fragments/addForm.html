@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:fragment="addForm">
+<div id="allChoices">
+        <div id="fieldsChoice">
+            <label for="inputName-0">Label du champ</label>
+            <input class="form-control" type="text" name="inputName-0" id="inputName-0">
+
+            <label for="selectName-0">Choisir les champs du formulaire :</label>
+            <select multiple name="selectName-0" class="form-control" id="selectName-0">
+                <option value="checkbox">checkbox</option>
+                <option value="color">color</option>
+                <option value="date">date</option>
+                <option value="email">email</option>
+                <option value="file">file</option>
+                <option value="hidden">hidden</option>
+                <option value="image">image</option>
+                <option value="month">month</option>
+                <option value="number">number</option>
+                <option value="password">password</option>
+                <option value="radio">radio</option>
+                <option value="range">range</option>
+                <option value="reset">reset</option>
+                <option value="search">search</option>
+                <option value="submit">submit</option>
+                <option value="tel">tel</option>
+                <option value="text">text</option>
+                <option value="time">time</option>
+                <option value="url">url</option>
+                <option value="week">week</option>
+                <option value="textArea">textarea</option>
+            </select>
+        </div>
+    </div>
+    <div id="addFormSelection" class="plus"><i class="fas fa-plus"></i></div>
+    <script th:src="@{/js/addForm.js}"></script>
+
+</th:block>
+</body>
+</html>

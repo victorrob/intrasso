@@ -1,8 +1,11 @@
 package com.intrasso;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intrasso.model.*;
 import com.intrasso.repository.AssociationRepository;
-import com.intrasso.repository.EventRepository;
+import com.intrasso.repository.PageWithFormRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.text.DateFormat;
@@ -10,12 +13,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Util {
-    public static <P extends AuditModel> Queue<P> getObjects(AssociationRepository repository, String type, List<Association> associationList, long id) {
-        Queue<P> objectQueue;
+    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, List<Association> associationList, long id) {
+        Queue<PageWithForm> objectQueue;
         if (type.equals("events")) {
-            objectQueue = new PriorityQueue(Comparator.comparing(Event::getEndDate));
+            objectQueue = new PriorityQueue<>(Comparator.comparing(PageWithForm::getEndDate));
         } else {
-            objectQueue = new PriorityQueue<>(Comparator.comparing(P::getCreatedAt));
+            objectQueue = new PriorityQueue<>(Comparator.comparing(PageWithForm::getCreatedAt));
         }
         if (id != -1) {
             associationList.add(repository.getOne(id));
@@ -23,55 +26,49 @@ public class Util {
             associationList = repository.findAll();
         }
         for (Association association : associationList) {
-            switch (type) {
-                case "events":
-                    objectQueue.addAll((List<P>) association.getEvents());
-                    break;
-                case "publications":
-                    objectQueue.addAll((List<P>) association.getPublications());
-                    break;
-                case "jobVacancies":
-                    objectQueue.addAll((List<P>) association.getJobVacancies());
-                    break;
-            }
+            objectQueue.addAll(association.getByType(type));
         }
         return objectQueue;
     }
 
-    public static <P extends AuditModel> Queue<P> getObjects(AssociationRepository repository, String type, List<Association> associationList) {
+    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, List<Association> associationList) {
         return Util.getObjects(repository, type, associationList, -1);
     }
 
-    public static <P extends AuditModel> Queue<P> getObjects(AssociationRepository repository, String type, long id) {
+    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, long id) {
         return Util.getObjects(repository, type, new ArrayList<>(), id);
     }
 
-    public static <P extends AuditModel> Queue<P> getObjects(AssociationRepository repository, String type) {
+    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type) {
         return Util.getObjects(repository, type, null, -1);
     }
 
-    public static <P extends Page, Q extends JpaRepository> List<P> getSome(Queue<P> queue, int size, Q repository) {
-        List<P> newList = new ArrayList<>();
+    public static List<PageWithForm> getSome(Queue<PageWithForm> queue, int size, PageWithFormRepository repository) {
+        List<PageWithForm> newList = new ArrayList<>();
         while (size > 0 && queue.size() > 0) {
-            P element = queue.remove();
-            if(element instanceof Event){
+            PageWithForm element = queue.remove();
+            if (element.getType().equals("event")) {
                 DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
-                System.out.println("endate : " + ((Event) element).getEndDateString("dd-MM-yyyy hh:mm"));
-                System.out.println("current date : " + df.format(new Date()));
-                if(((Event) element).getEndDate().before(new Date())){
-//                    repository.delete((Event)element);
-                    System.out.println("event gaved : " + element.getAsMap());
-                    System.out.println("event found : " + repository.getOne(element.getId()));
+                if (element.getEndDate().before(new Date())) {
                     repository.deleteById(element.getId());
                     element = null;
                 }
             }
-            if(element != null) {
+            if (element != null) {
                 size--;
                 newList.add(element);
             }
         }
         return newList;
+    }
+
+    public static Member getMember(Association association, long userId){
+        for(Member member : association.getMembers()){
+            if(member.getUser().getId() == userId){
+                return member;
+            }
+        }
+        return null;
     }
 
     public static Map<String, Long> getMapMember(List<Member> memberList) {
@@ -82,14 +79,25 @@ public class Util {
         return memberMap;
     }
 
-//    public static Map<Long, Map<String, Boolean>> getAutorizations(List<Member> memberList) {
-//        Map<Long, Map<String, Boolean>> autorizationMap = new HashMap<>();
-//        for (Member member : memberList) {
-//            autorizationMap.put(member.getUser().getId(), new HashMap<>());
-//            autorizationMap.get(member.getUser().getId())
-//
-//        }
-//    }
+    public static String objectToString(Object object) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            System.out.println("error : " + e.getMessage());
+        }
+        return "";
+    }
+
+    public static Object stringToObject(String json, TypeReference typeReference) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(json, typeReference);
+        } catch (Exception e) {
+            System.out.println("error : " + e.getMessage());
+        }
+        return null;
+    }
 }
 
 

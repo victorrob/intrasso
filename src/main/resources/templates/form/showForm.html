@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+</head>
+<body>
+<div th:replace="fragments/header"></div>
+<form class="mx-auto my-3 w-75" th:action="'../setForm/' + ${form.getId()}" method="post">
+<div th:replace="fragments/formForPage :: getForm(${form})"></div>
+    <p><input class="my-2 form-control btn btn-primary" type="submit" value="Submit"/></p>
+</form>
+</body>
+</html>

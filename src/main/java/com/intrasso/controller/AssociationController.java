@@ -2,14 +2,8 @@ package com.intrasso.controller;
 
 
 import com.intrasso.Util;
-import com.intrasso.model.Association;
-import com.intrasso.model.Event;
-import com.intrasso.model.Member;
-import com.intrasso.model.User;
-import com.intrasso.repository.AssociationRepository;
-import com.intrasso.repository.EventRepository;
-import com.intrasso.repository.MemberRepository;
-import com.intrasso.repository.UserRepository;
+import com.intrasso.model.*;
+import com.intrasso.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +26,9 @@ public class AssociationController {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private EventRepository eventRepository;
+    private PageWithFormRepository pageWithFormRepository;
+    @Autowired
+    private CandidateRepository candidateRepository;
 
     @GetMapping("/addAssociation")
     public String setAssociation(Model model) {
@@ -45,7 +41,7 @@ public class AssociationController {
     @PostMapping("/addAssociation")
     public String createAssociation(@ModelAttribute Association association, HttpServletRequest request) {
         System.out.println("get asso form");
-        if (association != null){
+        if (association != null) {
             System.out.println("asso created or updated");
             User user = userRepository.getOne((Long) request.getSession().getAttribute("userId"));
             association = associationRepository.save(association);
@@ -56,33 +52,32 @@ public class AssociationController {
             association.addMember(member);
             memberRepository.save(member);
             request.getSession().setAttribute("memberMap", Util.getMapMember(user.getMembers()));
-            return "redirect:/association/"+ association.getId();
+            return "redirect:/association/" + association.getId();
         }
 
         return "";
     }
 
     @GetMapping("/associations")
-    public String showAllAssociations(Model model){
+    public String showAllAssociations(Model model) {
         model.addAttribute("associations", associationRepository.findAll());
         return "association/associations";
     }
 
     @GetMapping("/association/{associationId:\\d+}")
-    public String getAssociation(@PathVariable("associationId") long associationId, Model model){
+    public String getAssociation(@PathVariable("associationId") long associationId, Model model) {
         System.out.println("looking for association");
         Optional<Association> opt = associationRepository.findById(associationId);
-        if(opt.isPresent()) {
+        if (opt.isPresent()) {
             System.out.println("association found");
             Association association = opt.get();
             model.addAttribute("association", association);
             int numberDisplayed = 3;
-            List<Event> eventList = Util.getSome(Util.getObjects(associationRepository, "events", associationId), numberDisplayed, eventRepository);
-            model.addAttribute("events", eventList);
-            List<Event> publicationList = Util.getSome(Util.getObjects(associationRepository, "publications", associationId), numberDisplayed, eventRepository);
-            model.addAttribute("publications", publicationList);
-            List<Event> jobVacancyList = Util.getSome(Util.getObjects(associationRepository, "jobVacancies", associationId), numberDisplayed, eventRepository);
-            model.addAttribute("jobVacancies", jobVacancyList);
+            String[] typeList = {"event", "publication", "jobVacancy"};
+            for (String type : typeList) {
+                System.out.println(type + " : " + Util.getSome(Util.getObjects(associationRepository, type, associationId), numberDisplayed, pageWithFormRepository));
+                model.addAttribute(type, Util.getSome(Util.getObjects(associationRepository, type, associationId), numberDisplayed, pageWithFormRepository));
+            }
             model.addAttribute("members", association.getMembers());
             return "association/showAssociation";
         }
@@ -92,24 +87,23 @@ public class AssociationController {
     }
 
     @GetMapping("/association/{associationId:\\d+}/addMember")
-    public String addMember(Model model, @PathVariable("associationId") long associationId, HttpServletRequest request){
+    public String addMember(Model model, @PathVariable("associationId") long associationId, HttpServletRequest request) {
         return manageMember(model, associationId, -1, request);
     }
 
     @GetMapping("/association/{associationId:\\d+}/editMember/{memberId:\\d+}")
-    public String editMember(Model model, @PathVariable long associationId, @PathVariable long memberId, HttpServletRequest request){
+    public String editMember(Model model, @PathVariable long associationId, @PathVariable long memberId, HttpServletRequest request) {
         return manageMember(model, associationId, memberId, request);
     }
 
-    private String manageMember(Model model, long associationId, long memberId, HttpServletRequest request){
+    private String manageMember(Model model, long associationId, long memberId, HttpServletRequest request) {
         System.out.println("asso found : " + associationRepository.getOne(associationId));
         model.addAttribute("association", associationRepository.getOne(associationId));
         if (memberId != -1) {
             System.out.println(memberRepository.getOne(memberId));
             model.addAttribute("member", memberRepository.getOne(memberId));
             request.getSession().setAttribute("editedMemberId", memberId);
-        }
-        else{
+        } else {
             request.getSession().removeAttribute("editedMemberId");
             model.addAttribute("member", new Member());
         }
@@ -117,15 +111,14 @@ public class AssociationController {
     }
 
     @PostMapping("/association/{associationId:\\d+}/addMember")
-    public String registerMember(@PathVariable("associationId") long associationId, HttpServletRequest request){
+    public String registerMember(@PathVariable("associationId") long associationId, HttpServletRequest request) {
         Object memberIdObject = request.getSession().getAttribute("editedMemberId");
         Member member;
-        if (memberIdObject != null){
+        if (memberIdObject != null) {
             member = memberRepository.getOne((long) memberIdObject);
             member.update(request);
             memberRepository.save(member);
-        }
-        else {
+        } else {
             User user = userRepository.findByEmail(request.getParameter("email")).get(0);
             Association association = associationRepository.getOne(associationId);
             member = new Member(request);
@@ -138,8 +131,39 @@ public class AssociationController {
     }
 
     @GetMapping("/association/{associationId:\\d+}/deleteMember/{memberId:\\d+}")
-    public String deleteMember(@PathVariable long associationId, @PathVariable long memberId){
+    public String deleteMember(@PathVariable long associationId, @PathVariable long memberId) {
         memberRepository.deleteById(memberId);
         return "redirect:/association/" + associationId;
+    }
+
+    @GetMapping("/association/{associationId:\\d+}/{type:(?:event|publication|jobVacancy)}/{objectId:\\d+}/showCandidates")
+    public String getCandidates(@PathVariable long associationId, @PathVariable String type, @PathVariable long objectId, Model model, HttpServletRequest request){
+
+        model.addAttribute("candidateList", pageWithFormRepository.getOne(objectId).getCandidateList());
+        return "association/showCandidates";
+    }
+
+    @PostMapping("/association/{associationId:\\d+}/{type:(?:event|publication|jobVacancy)}/{objectId:\\d+}/candidate/{candidateId:\\d+}/{choice:(?:accept|deny)")
+    public String manageCandidates(@PathVariable long associationId, @PathVariable String type, @PathVariable String choice, @PathVariable long candidateId, HttpServletRequest request){
+        Association association = associationRepository.getOne(associationId);
+        long userId = (Long) request.getSession().getAttribute("userId");
+        Member member = Util.getMember(association, userId);
+        if(!member.canManageMembers()){
+            return "0";
+        }
+        Candidate candidate = candidateRepository.getOne(candidateId);
+        if(choice.equals("deny")){
+            candidate.decline();
+        }
+        else if(choice.equals("accept")){
+            candidate.accept();
+            if(type.equals("jobVacancy")){
+                association.addMember(userRepository.getOne(userId), candidate.getPageWithForm().getRole());
+            }
+        }
+        else {
+            return "0";
+        }
+        return "1";
     }
 }

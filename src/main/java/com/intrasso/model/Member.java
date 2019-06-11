@@ -36,6 +36,19 @@ public class Member extends AuditModel {
         this.editAssociation = false;
     }
 
+    public Member(User user, String role){
+        this.user = user;
+        this.role = role;
+        this.association = null;
+        this.editPublication = false;
+        this.editEvent = false;
+        this.editJobVacancy = false;
+        this.acceptMembers = false;
+        //TODO remove acceptMembers
+        this.acceptMembers = false;
+        this.editAssociation = false;
+    }
+
     public Member(HttpServletRequest request){
         this.user = null;
         this.association = null;
@@ -129,6 +142,7 @@ public class Member extends AuditModel {
         this.editEvent = true;
         this.editJobVacancy = true;
         this.acceptMembers = true;
+        this.manageMembers = true;
         this.editAssociation = true;
     }
 }

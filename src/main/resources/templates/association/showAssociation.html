@@ -14,15 +14,15 @@
 <div id="dashboard" class="d-flex justify-content-around flex-wrap">
     <div id="events" class="cardGroup">
         <h4>Événements : <a class="addLink" th:href="${association.getId()} + '/addEvent'"><i class="fas fa-plus"></i></a> </h4>
-        <div th:replace="fragments/showPage :: pageAll(${events}, 'Le ', 'events', 'dd/MM/yy à hh:mm')"></div>
+        <div th:replace="fragments/showPage :: pageAll(${event}, 'Le ', 'event', 'dd/MM/yy à hh:mm')"></div>
     </div>
     <div id="publications" class="cardGroup">
         <h4>Publications : <a class="addLink" th:href="${association.getId()} + '/addPublication'"><i class="fas fa-plus"></i></a></h4>
-        <div th:replace="fragments/showPage :: pageAll(${publications}, 'Posté le ', 'publication', 'dd/MM/YY')"></div>
+        <div th:replace="fragments/showPage :: pageAll(${publication}, 'Posté le ', 'publication', 'dd/MM/YY')"></div>
     </div>
     <div id="jobVacancies" class="cardGroup">
         <h4>Postes vacants : <a class="addLink" th:href="${association.getId()} + '/addJobVacancy'"><i class="fas fa-plus"></i></a></h4>
-        <div th:replace="fragments/showPage :: pageAll(${jobVacancies}, 'Jusqu\'au ', 'jobVacancies', 'dd/MM/yy à hh:mm')"></div>
+        <div th:replace="fragments/showPage :: pageAll(${jobVacancy}, 'Jusqu\'au ', 'jobVacancy', 'dd/MM/yy à hh:mm')"></div>
     </div>
     <div id="members" class="cardGroup">
         <h4>Membres : <a class="addLink" th:href="${association.getId()} + '/addMember'"><i class="fas fa-plus"></i></a></h4>
