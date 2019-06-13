@@ -72,7 +72,7 @@ public class MainController {
         System.out.println("type = " + type);
         Association association = associationRepository.getOne(associationId);
         model.addAttribute("association", association);
-        model.addAttribute(type.toLowerCase(), ((edit) ? pageWithFormRepository.getOne(objectId) : new PageWithForm()));
+        model.addAttribute(type.toLowerCase(), ((edit) ? pageWithFormRepository.getOne(objectId) : new PageWithForm(type)));
         return type.toLowerCase() + "/add" + type;
     }
 
@@ -83,11 +83,13 @@ public class MainController {
         if (request.getSession().getAttribute("pageWithFormId") != null) {
             long objectId = (long) request.getSession().getAttribute("pageWithFormId");
             request.getSession().removeAttribute("pageWithFormId");
-            pageWithFormRepository.getOne(objectId).update(request);
+            PageWithForm pageWithForm = pageWithFormRepository.getOne(objectId);
+            pageWithForm.update(request);
+            pageWithFormRepository.save(pageWithForm);
             return "redirect:/association/" + association.getId();
         }
         PageWithForm pageWithForm = new PageWithForm(request, type);
-        if(request.getParameter("selectName-0") != null){
+        if (request.getParameter("selectName-0") != null) {
             System.out.println("request is not null");
             Form form = new Form(request);
             for (Field field : form.getFields()) {
@@ -105,35 +107,56 @@ public class MainController {
     public String showHomePag(Model model, HttpServletRequest request) {
         int numberDisplayed = 3;
         long userId = (Long) request.getSession().getAttribute("userId");
-        String[] typeList = {"event", "publication", "jobVacancy"};
+        String[] typeList = {"event", "publication", "jobvacancy"};
         model.addAttribute("candidateList", userRepository.getOne(userId).getCandidateList());
-        for(String type : typeList){
+        for (String type : typeList) {
             model.addAttribute(type, Util.getSome(Util.getObjects(associationRepository, type, userId), numberDisplayed, pageWithFormRepository));
         }
         return "user/homePage";
     }
 
-    @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d++}/form/{formId:\\d+}")
-    public String showEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long objectId, @PathVariable long formId, Model model){
+    @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d++}/form/{formId:\\d+}/{end:(?:show|edit)}")
+    public String showEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long objectId, @PathVariable long formId, @PathVariable String end, Model model, HttpServletRequest request) {
         model.addAttribute("associationId", associationId);
         model.addAttribute("type", type);
         PageWithForm pageWithForm = pageWithFormRepository.getOne(objectId);
         Form form = formRepository.getOne(formId);
-        Candidate candidate = form.getCandidate();
-        model.addAttribute("title", ((candidate != null) ? candidate.getUser().getFirstName() : pageWithForm.getName()));
-        model.addAttribute("editable", candidate != null);
+        Candidate candidate;
+        if(end.equals("show")) {
+            candidate = form.getCandidate();
+        }
+        else {
+            candidate = Util.getCandidate(pageWithForm, request);
+        }
+        String title = pageWithForm.getName();
+        boolean editable = form.getCandidate() == null;
+
+        if (candidate != null) {
+            if(!end.equals("show")) {
+                form = candidate.getForm();
+                editable = true;
+            }
+            title = candidate.getUser().getFirstName() + " " + candidate.getUser().getLastName();
+        }
+        model.addAttribute("title", StringUtils.capitalize(title));
+        model.addAttribute("editable", editable);
         model.addAttribute("form", form);
         return "form/showForm";
     }
 
     @PostMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d++}/setForm/{formId:\\d+}")
-    public String editEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long formId, HttpServletRequest request){
+    public String editEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long formId, HttpServletRequest request) {
         Form form = formRepository.getOne(formId);
-        Form newForm = new Form(request, form);
-        User user = userRepository.getOne((Long)request.getSession().getAttribute("userId"));
-        Candidate candidate = new Candidate(newForm, user);
-        form.getPageWithForm().addCandidate(candidate);
-        formRepository.save(newForm);
+        if (form.getCandidate() != null && form.getCandidate().getUser().getId().equals(request.getSession().getAttribute("userId"))) {
+            form.update(request, form);
+            formRepository.save(form);
+        } else {
+            Form newForm = new Form(request, form);
+            User user = userRepository.getOne((Long) request.getSession().getAttribute("userId"));
+            Candidate candidate = new Candidate(newForm, user);
+            form.getPageWithForm().addCandidate(candidate);
+            formRepository.save(newForm);
+        }
         return "redirect:/association/" + associationId;
     }
 

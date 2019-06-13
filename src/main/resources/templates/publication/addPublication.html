@@ -12,9 +12,9 @@
 <h1 class="mx-auto my-1">Créer une publication :</h1>
 <div class="formBlock mx-auto w-75">
     <form th:action="'/association/'+ ${association.getId()} + '/editPublication'" method="post">
-        <div th:replace="fragments/formPageWithForm :: formPageWithForm(${publication.getAsMap()})"></div>
+        <div th:replace="fragments/formPageWithForm :: formPageWithForm(${publication.getAsMap()}, 'publication')"></div>
 
-        <p><input class="form-control btn btn-primary" type="submit" value="Submit"/></p>
+        <p><input class="form-control my-2 btn btn-primary" type="submit" value="Submit"/></p>
     </form>
 </div>
 </body>

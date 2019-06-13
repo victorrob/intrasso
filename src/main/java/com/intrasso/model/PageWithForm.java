@@ -31,6 +31,7 @@ public class PageWithForm extends Page {
     private String role;
     private String type;
     private boolean published;
+    private boolean hasForm;
 
     public PageWithForm() {
         form = null;
@@ -39,6 +40,17 @@ public class PageWithForm extends Page {
         role = "";
         type = "";
         published = false;
+        hasForm = false;
+    }
+
+    public PageWithForm(String type){
+        form = null;
+        candidateList = new ArrayList<>();
+        endDate = new Date();
+        role = "";
+        this.type = type;
+        published = false;
+        hasForm = type.equals("JobVacancy");
     }
 
     public PageWithForm(HttpServletRequest request, String type) {
@@ -51,8 +63,10 @@ public class PageWithForm extends Page {
     }
 
     public void setForm(Form form) {
-        this.form = form;
-        form.setPageWithForm(this);
+        if (!hasForm) {
+            this.form = form;
+            form.setPageWithForm(this);
+        }
     }
 
     public Date getEndDate() {
@@ -73,6 +87,9 @@ public class PageWithForm extends Page {
         }
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         dataMap.put("endDate", date.format(endDate));
+        dataMap.put("published", ((published) ? "1" : "0"));
+        dataMap.put("hasForm", ((hasForm) ? "1" : "0"));
+
         return dataMap;
     }
 
@@ -86,6 +103,7 @@ public class PageWithForm extends Page {
         this.setForm(pageWithForm.getForm());
         this.setEndDate(pageWithForm.getEndDate());
         this.published = pageWithForm.published;
+        this.hasForm = pageWithForm.hasForm;
         candidateList = pageWithForm.candidateList;
 
     }
@@ -94,17 +112,33 @@ public class PageWithForm extends Page {
     public void update(HttpServletRequest request) {
         super.update(request);
         candidateList = new ArrayList<>();
+
         String dateString = request.getParameter("endDateString");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            endDate = df.parse(dateString);
-        } catch (java.text.ParseException e) {
-            System.out.println("erreur : " + e.getMessage());
+        if(dateString != null) {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                endDate = df.parse(dateString);
+            } catch (java.text.ParseException e) {
+                System.out.println("erreur : " + e.getMessage());
+                endDate = new Date();
+            }
+        }
+        else {
             endDate = new Date();
         }
-        System.out.println("is published : " + request.getParameter("published"));
-        published = request.getParameter("published").equals("true");
-        form = null;
+        System.out.println(request.getParameter("published"));
+        published = request.getParameter("published") != null;
+        System.out.println(published);
+        hasForm = request.getParameter("hasForm") != null;
+        if(!hasForm){
+            form = null;
+        }
+        else if(form != null) {
+            form.update(request);
+        }
+        else {
+            form = new Form(request);
+        }
     }
 
     public Association getAssociation() {
@@ -168,5 +202,13 @@ public class PageWithForm extends Page {
             endDate = new Date();
         }
         published = isPublished;
+    }
+
+    public boolean hasForm() {
+        return hasForm;
+    }
+
+    public void setHasForm(boolean hasForm) {
+        this.hasForm = hasForm;
     }
 }

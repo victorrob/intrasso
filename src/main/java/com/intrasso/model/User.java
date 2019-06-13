@@ -1,6 +1,7 @@
 package com.intrasso.model;
 
 import com.intrasso.LDAP.LDAPObject;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public class User extends AuditModel {
 
     public User(LDAPObject ldapObject){
         this.members = new ArrayList<>();
-        this.firstName = ldapObject.getPrenom();
-        this.lastName = ldapObject.getNomFamille();
+        this.firstName = StringUtils.capitalize(ldapObject.getPrenom());
+        this.lastName = StringUtils.capitalize(ldapObject.getNomFamille());
         this.email = ldapObject.getEmail();
         this.type = ldapObject.getType();
         this.number = ldapObject.getNumber();

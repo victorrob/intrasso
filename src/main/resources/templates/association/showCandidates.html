@@ -14,7 +14,7 @@
         <div class="card d-flex justify-content-end flex-row">
             <button id="deny" class="btn btn-danger mx-2 ajax-btn">Refuser</button>
             <button id="accept" class="btn btn-success mx-2 ajax-btn">Accepter</button>
-            <a th:href="'form/' + ${candidate.getForm().getId()}" class="mx-2 btn btn-primary">En savoir plus</a>
+            <a th:href="'form/' + ${candidate.getForm().getId()} + '/show'" class="mx-2 btn btn-primary">En savoir plus</a>
         </div>
     </div>
 </div>

@@ -7,7 +7,9 @@ import com.intrasso.model.*;
 import com.intrasso.repository.AssociationRepository;
 import com.intrasso.repository.PageWithFormRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.web.HttpRequestHandler;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -95,6 +97,15 @@ public class Util {
             return objectMapper.readValue(json, typeReference);
         } catch (Exception e) {
             System.out.println("error : " + e.getMessage());
+        }
+        return null;
+    }
+
+    public static Candidate getCandidate(PageWithForm pageWithForm, HttpServletRequest request){
+        for(Candidate candidate : pageWithForm.getCandidateList()){
+            if(candidate.getUser().getId().equals(request.getSession().getAttribute("userId"))){
+                return candidate;
+            }
         }
         return null;
     }

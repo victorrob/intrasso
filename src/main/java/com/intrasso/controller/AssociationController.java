@@ -71,7 +71,7 @@ public class AssociationController {
             long userId = (Long) request.getSession().getAttribute("userId");
             model.addAttribute("association", association);
             int numberDisplayed = 3;
-            String[] typeList = {"event", "publication", "jobVacancy"};
+            String[] typeList = {"event", "publication", "jobvacancy"};
             for (String type : typeList) {
                 System.out.println(type + " : " + Util.getSome(Util.getObjects(associationRepository, type, associationId, userId), numberDisplayed, pageWithFormRepository));
                 model.addAttribute(type, Util.getSome(Util.getObjects(associationRepository, type, associationId, userId), numberDisplayed, pageWithFormRepository));
@@ -148,23 +148,26 @@ public class AssociationController {
         Association association = associationRepository.getOne(associationId);
         long userId = (Long) request.getSession().getAttribute("userId");
         Member member = Util.getMember(association, userId);
-        if(!member.canManageMembers()){
-            return 0;
-        }
         Candidate candidate = candidateRepository.getOne(candidateId);
-        if(choice.equals("deny")){
-            candidate.decline();
-            candidateRepository.save(candidate);
-        }
-        else if(choice.equals("accept")){
-            candidate.accept();
-            if(type.equals("jobVacancy")){
-                association.addMember(userRepository.getOne(userId), candidate.getPageWithForm().getRole());
-            }
-            candidateRepository.save(candidate);
-        }
-        else if((choice.equals("dismiss") || choice.equals("delete")) && userId == candidate.getUser().getId()){
+
+        if((choice.equals("dismiss") || choice.equals("delete")) && userId == candidate.getUser().getId()) {
             candidateRepository.deleteById(candidateId);
+        }
+        else if(member != null && member.canManageMembers()){
+            if(choice.equals("deny")){
+                candidate.decline();
+                candidateRepository.save(candidate);
+            }
+            else if(choice.equals("accept")){
+                candidate.accept();
+                if(type.equals("jobVacancy")){
+                    association.addMember(userRepository.getOne(userId), candidate.getPageWithForm().getRole());
+                }
+                candidateRepository.save(candidate);
+            }
+            else {
+                return 0;
+            }
         }
         else {
             return 0;

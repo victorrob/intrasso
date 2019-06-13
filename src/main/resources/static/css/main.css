@@ -44,3 +44,8 @@ body{
     border-bottom: solid black .05rem;
     padding: 1rem;
 }
+
+.hidden{
+    display: none;
+    visibility: hidden;
+}

@@ -5,10 +5,26 @@
     <title>Title</title>
 </head>
 <body>
-<div th:fragment="formPageWithForm(dataMap)">
+<div th:fragment="formPageWithForm(dataMap, type)">
     <div th:replace="fragments/formPage:: formPage(${dataMap})"></div>
-    <label>Date de fin : <input class="form-control" type="date" name="endDateString" id="endDate" th:value="${dataMap.get('endDate')}"></label>
-    <div th:replace="fragments/addForm :: addForm"></div>
+    <div th:if="${type.equals('jobVacancy')}">
+        <label for="role">Rôle :</label>
+        <input class="form-control" name="role" id="role" type="text" th:value="${dataMap.get('role')}">
+    </div>
+    <div th:if="${!type.equals('publication')}">
+        <label>Date de fin : <input class="form-control" th:min="${dataMap.get('endDate')}" type="date"
+                                    name="endDateString" id="endDate" th:value="${dataMap.get('endDate')}"></label>
+    </div>
+    <div th:if="${!type.equals('publication')}">
+        <div th:if="${type.equals('event')}" class="custom-control custom-switch my-2 mx-auto">
+            <input type="checkbox" th:attr="checked=${dataMap.get('hasForm').equals('1')}" class="custom-control-input"
+                   name="hasForm" id="hasForm">
+            <label class="custom-control-label" for="hasForm">Formulaire :</label>
+        </div>
+        <div th:class="'formVisible ' + ((${dataMap.get('hasForm').equals('0')}) ? 'hidden' : '')">
+            <div th:replace="fragments/addForm :: addForm"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

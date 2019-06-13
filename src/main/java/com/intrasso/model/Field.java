@@ -27,14 +27,12 @@ public class Field {
     public Field(String type, Object object, String inputId){
         this.type = type;
         label = "";
-        ObjectMapper objectMapper = new ObjectMapper();
         value = Util.objectToString(object);
         this.inputId = inputId;
     }
     public Field(String type, Object object, String inputId, String label){
         this.type = type;
         this.label = label;
-        ObjectMapper objectMapper = new ObjectMapper();
         value = Util.objectToString(object);
         this.inputId = inputId;
     }
@@ -60,7 +58,8 @@ public class Field {
     }
 
     public void setValue(Object value) {
-        this.value = Util.objectToString(value);;
+        System.out.println(Util.objectToString(value));
+        this.value = Util.objectToString(value);
     }
 
     public String getLabel() {
@@ -72,6 +71,7 @@ public class Field {
     }
 
     public void setValue(String value) {
+        System.out.println("as string : " + value);
         this.value = value;
     }
 

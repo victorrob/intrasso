@@ -30,7 +30,15 @@ public class Form extends AuditModel {
     }
 
     public Form(HttpServletRequest request, Form form) {
-        update(request, form);
+        fields = new ArrayList<>();
+        for (Field field : form.getFields()) {
+            fields.add(new Field(
+                    field.getType(),
+                    request.getParameter(field.getInputId()),
+                    field.getInputId(),
+                    field.getLabel()
+            ));
+        }
     }
 
     public List<Field> getFields() {
@@ -55,21 +63,15 @@ public class Form extends AuditModel {
         Object value = request.getParameter("selectName-" + i);
         System.out.println(value);
         while (value != null) {
-            String label = (String) request.getParameter("inputName-" + i);
+            String label = request.getParameter("inputName-" + i);
             fields.add(new Field((String) value, null, "selectName-" + i++, label));
             value = request.getParameter("selectName-" + i);
         }
     }
 
     public void update(HttpServletRequest request, Form form){
-        fields = new ArrayList<>();
         for (Field field : form.getFields()) {
-            fields.add(new Field(
-                    field.getType(),
-                    request.getParameter(field.getInputId()),
-                    field.getInputId(),
-                    field.getLabel()
-            ));
+            field.setValue((Object) request.getParameter(field.getInputId()));
         }
     }
 

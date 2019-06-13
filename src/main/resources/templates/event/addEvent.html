@@ -12,10 +12,12 @@
 <h1 class="mx-auto my-1">Créer un événement :</h1>
 <div class="formBlock mx-auto w-75">
     <form th:action="'/association/'+ ${association.getId()} + '/editEvent'" method="post">
-        <div th:replace="fragments/formPageWithForm :: formPageWithForm(${event.getAsMap()})"></div>
+        <div th:replace="fragments/formPageWithForm :: formPageWithForm(${event.getAsMap()}, 'event')"></div>
 
-        <p><input class="form-control btn btn-primary" type="submit" value="Submit"/></p>
+        <p><input class="form-control my-2 btn btn-primary" type="submit" value="Submit"/></p>
     </form>
 </div>
+<script th:src="@{/js/addEvent.js}"></script>
+
 </body>
 </html>

@@ -42,6 +42,10 @@ public class UserController {
 //            return "redirect:/";
 //        }
         ldapObject.mail = "victor.robert@isep.fr";
+
+        if(user.equals("test")){
+            ldapObject.mail = "victorrobert@isep.fr";
+        }
         List<User> userList = userRepository.findByEmail(ldapObject.getEmail());
         User newUser;
         if (userList.isEmpty()) {
