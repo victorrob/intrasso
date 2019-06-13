@@ -22,7 +22,7 @@
     </div>
     <div id="jobVacancies" class="cardGroup">
         <h4>Postes vacants : <a class="addLink" th:href="${association.getId()} + '/addJobVacancy'"><i class="fas fa-plus"></i></a></h4>
-        <div th:replace="fragments/showPage :: pageAll(${jobVacancy}, 'Jusqu\'au ', 'jobVacancy', 'dd/MM/yy à hh:mm')"></div>
+        <div th:replace="fragments/showPage :: pageAll(${jobvacancy}, 'Jusqu\'au ', 'jobVacancy', 'dd/MM/yy à hh:mm')"></div>
     </div>
     <div id="members" class="cardGroup">
         <h4>Membres : <a class="addLink" th:href="${association.getId()} + '/addMember'"><i class="fas fa-plus"></i></a></h4>

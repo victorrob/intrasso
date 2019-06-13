@@ -97,8 +97,8 @@ public class MainController {
             }
             formRepository.save(form);
             pageWithForm.setForm(form);
-            association.addPageWithForm(pageWithForm);
         }
+        association.addPageWithForm(pageWithForm);
         associationRepository.save(association);
         return "redirect:/association/" + association.getId();
     }

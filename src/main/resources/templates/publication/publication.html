@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Publications</title>
+
+    <link rel="stylesheet" th:href="@{/css/events/events.css}">
+</head>
+<body>
+<div th:replace="fragments/header"></div>
+
+<th:block th:if="${association != null}">
+    <h4 th:text="'Liste des publications de ' + ${association.getName()}"></h4>
+</th:block>
+<th:block th:if="${association == null}">
+    <h4>Liste des publications :</h4>
+</th:block>
+
+<div class="cardGroup">
+    <div th:replace="fragments/showPage :: pageAll(${publication}, 'Posté le ', 'publication', 'dd/MM/YY')"></div>
+</div>
+</body>
+</html>

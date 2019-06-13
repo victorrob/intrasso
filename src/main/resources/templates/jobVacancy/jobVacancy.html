@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Events</title>
+
+    <link rel="stylesheet" th:href="@{/css/events/events.css}">
+</head>
+<body>
+<div th:replace="fragments/header"></div>
+
+<th:block th:if="${association != null}">
+    <h4 th:text="'Liste des postes vacants de ' + ${association.getName()}"></h4>
+</th:block>
+<th:block th:if="${association == null}">
+    <h4>Liste des postes vacants :</h4>
+</th:block>
+
+<div class="cardGroup">
+    <div th:replace="fragments/showPage :: pageAll(${jobvacancy}, 'Jusqu\'au ', 'jobVacancy', 'dd/MM/yy à hh:mm')"></div>
+</div>
+</body>
+</html>
