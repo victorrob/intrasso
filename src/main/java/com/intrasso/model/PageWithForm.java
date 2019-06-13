@@ -12,7 +12,10 @@ import java.util.Map;
 @Entity
 @Table(name = "pageWithForm")
 public class PageWithForm extends Page {
-    @OneToOne
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
     @JoinColumn
     private Form form;
     private Date endDate;
@@ -21,23 +24,24 @@ public class PageWithForm extends Page {
     private Association association;
     @OneToMany(
             mappedBy = "pageWithForm",
-            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
     private List<Candidate> candidateList;
 
     private String role;
     private String type;
+    private boolean published;
 
-    public PageWithForm(){
+    public PageWithForm() {
         form = null;
         candidateList = new ArrayList<>();
         endDate = new Date();
         role = "";
         type = "";
+        published = false;
     }
 
-    public PageWithForm(HttpServletRequest request, String type){
+    public PageWithForm(HttpServletRequest request, String type) {
         update(request);
         this.type = type;
     }
@@ -55,15 +59,15 @@ public class PageWithForm extends Page {
         return endDate;
     }
 
-    public String getEndDateString(String dateFormat){
+    public String getEndDateString(String dateFormat) {
         SimpleDateFormat date = new SimpleDateFormat(dateFormat);
         return date.format(endDate);
     }
 
     @Override
-    public Map<String, String> getAsMap(){
+    public Map<String, String> getAsMap() {
         Map<String, String> dataMap = super.getAsMap();
-        if(endDate == null){
+        if (endDate == null) {
             dataMap.put("endDate", "");
             return dataMap;
         }
@@ -71,21 +75,23 @@ public class PageWithForm extends Page {
         dataMap.put("endDate", date.format(endDate));
         return dataMap;
     }
+
     @Override
-    public void update(Object object){
-        if(!(object instanceof PageWithForm)){
+    public void update(Object object) {
+        if (!(object instanceof PageWithForm)) {
             return;
         }
         PageWithForm pageWithForm = (PageWithForm) object;
         super.update(object);
         this.setForm(pageWithForm.getForm());
         this.setEndDate(pageWithForm.getEndDate());
+        this.published = pageWithForm.published;
         candidateList = pageWithForm.candidateList;
 
     }
 
     @Override
-    public void update(HttpServletRequest request){
+    public void update(HttpServletRequest request) {
         super.update(request);
         candidateList = new ArrayList<>();
         String dateString = request.getParameter("endDateString");
@@ -96,8 +102,11 @@ public class PageWithForm extends Page {
             System.out.println("erreur : " + e.getMessage());
             endDate = new Date();
         }
+        System.out.println("is published : " + request.getParameter("published"));
+        published = request.getParameter("published").equals("true");
         form = null;
     }
+
     public Association getAssociation() {
         return association;
     }
@@ -107,20 +116,26 @@ public class PageWithForm extends Page {
     }
 
     public List<Candidate> getCandidateList() {
-        return candidateList;
+        List<Candidate> candidates = new ArrayList<>();
+        for (Candidate candidate : candidateList) {
+            if (candidate.getStatus().equals("en attente")) {
+                candidates.add(candidate);
+            }
+        }
+        return candidates;
     }
 
     public void setCandidateList(List<Candidate> candidates) {
         this.candidateList = candidates;
     }
 
-    public void addCandidate(Candidate candidate){
+    public void addCandidate(Candidate candidate) {
         this.candidateList.add(candidate);
         candidate.setPageWithForm(this);
     }
 
     @PreRemove
-    public void removeFromAssociation(){
+    public void removeFromAssociation() {
         association.getPageWithFormList().remove(this);
     }
 
@@ -142,5 +157,16 @@ public class PageWithForm extends Page {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean isPublished) {
+        if (type.equals("publication") && !published && isPublished) {
+            endDate = new Date();
+        }
+        published = isPublished;
     }
 }

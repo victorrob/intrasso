@@ -32,8 +32,8 @@ public class MainController {
     private PageWithFormRepository pageWithFormRepository;
 
     @GetMapping("/{type:event|publication|jobVacancy}")
-    public String showAll(@PathVariable String type, Model model) {
-        Queue<PageWithForm> queue = Util.getObjects(associationRepository, type);
+    public String showAll(@PathVariable String type, Model model, HttpServletRequest request) {
+        Queue<PageWithForm> queue = Util.getObjects(associationRepository, type, (Long) request.getSession().getAttribute("userId"));
         model.addAttribute(type, queue);
         return type + "/" + type;
     }
@@ -46,8 +46,10 @@ public class MainController {
     }
 
     @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d+}")
-    public String showOneObject(@PathVariable long objectId, @PathVariable String type, Model model) {
-        model.addAttribute(type, pageWithFormRepository.getOne(objectId));
+    public String showOneObject(@PathVariable long objectId, @PathVariable String type, Model model, HttpServletRequest request) {
+        PageWithForm pageWithForm = pageWithFormRepository.getOne(objectId);
+        model.addAttribute("member", Util.getMember(pageWithForm.getAssociation(), (Long) request.getSession().getAttribute("userId")));
+        model.addAttribute(type, pageWithForm);
         return type + "/show" + StringUtils.capitalize(type);
     }
 
@@ -102,18 +104,25 @@ public class MainController {
     @GetMapping("/home")
     public String showHomePag(Model model, HttpServletRequest request) {
         int numberDisplayed = 3;
+        long userId = (Long) request.getSession().getAttribute("userId");
         String[] typeList = {"event", "publication", "jobVacancy"};
+        model.addAttribute("candidateList", userRepository.getOne(userId).getCandidateList());
         for(String type : typeList){
-            model.addAttribute(type, Util.getSome(Util.getObjects(associationRepository, type), numberDisplayed, pageWithFormRepository));
+            model.addAttribute(type, Util.getSome(Util.getObjects(associationRepository, type, userId), numberDisplayed, pageWithFormRepository));
         }
         return "user/homePage";
     }
 
     @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d++}/form/{formId:\\d+}")
-    public String showEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long formId, Model model){
+    public String showEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long objectId, @PathVariable long formId, Model model){
         model.addAttribute("associationId", associationId);
         model.addAttribute("type", type);
-        model.addAttribute("form", formRepository.getOne(formId));
+        PageWithForm pageWithForm = pageWithFormRepository.getOne(objectId);
+        Form form = formRepository.getOne(formId);
+        Candidate candidate = form.getCandidate();
+        model.addAttribute("title", ((candidate != null) ? candidate.getUser().getFirstName() : pageWithForm.getName()));
+        model.addAttribute("editable", candidate != null);
+        model.addAttribute("form", form);
         return "form/showForm";
     }
 

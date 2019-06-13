@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Util {
-    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, List<Association> associationList, long id) {
+    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, List<Association> associationList, long id, long userId) {
         Queue<PageWithForm> objectQueue;
         if (type.equals("events")) {
             objectQueue = new PriorityQueue<>(Comparator.comparing(PageWithForm::getEndDate));
@@ -26,21 +26,22 @@ public class Util {
             associationList = repository.findAll();
         }
         for (Association association : associationList) {
-            objectQueue.addAll(association.getByType(type));
+            boolean isMember = getMember(association, userId) != null;
+            objectQueue.addAll(association.getByType(type, isMember));
         }
         return objectQueue;
     }
 
-    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, List<Association> associationList) {
-        return Util.getObjects(repository, type, associationList, -1);
+    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, List<Association> associationList, long userId) {
+        return Util.getObjects(repository, type, associationList, -1, userId);
     }
 
-    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, long id) {
-        return Util.getObjects(repository, type, new ArrayList<>(), id);
+    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, long id, long userId) {
+        return Util.getObjects(repository, type, new ArrayList<>(), id, userId);
     }
 
-    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type) {
-        return Util.getObjects(repository, type, null, -1);
+    public static Queue<PageWithForm> getObjects(AssociationRepository repository, String type, long userId) {
+        return Util.getObjects(repository, type, null, -1, userId);
     }
 
     public static List<PageWithForm> getSome(Queue<PageWithForm> queue, int size, PageWithFormRepository repository) {
@@ -48,7 +49,6 @@ public class Util {
         while (size > 0 && queue.size() > 0) {
             PageWithForm element = queue.remove();
             if (element.getType().equals("event")) {
-                DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
                 if (element.getEndDate().before(new Date())) {
                     repository.deleteById(element.getId());
                     element = null;

@@ -8,11 +8,12 @@
 </head>
 <body>
 <div th:replace="fragments/header"></div>
-<h1 class="mx-auto my-1" style="width: -moz-fit-content" th:text="${event.getName()}"></h1>
+<h1 class="mx-auto my-2" style="width: -moz-fit-content" th:text="${event.getName()}"></h1>
+<a th:if="${member.canManageMembers()}" class="my-2 btn btn-success mx-auto" th:href="${event.getId()} + '/showCandidates'">Voir les candidatures</a>
 <div class="w-75 mx-auto">
     <p th:text="${event.getContent()}"></p>
     <p th:text="'Finis le ' + ${event.getEndDateString('dd/MM/yy à hh:mm')}"></p>
 </div>
-<a th:href="${event.getId()} + '/form/' + ${event.getForm().getId()}"><button class="btn btn-primary">Remplir le formulaire</button></a>
+<a th:href="${event.getId()} + '/form/' + ${event.getForm().getId()}" class="mx-auto btn btn-primary">Remplir le formulaire</a>
 </body>
 </html>

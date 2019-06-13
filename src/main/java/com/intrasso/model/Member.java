@@ -30,9 +30,7 @@ public class Member extends AuditModel {
         this.editPublication = false;
         this.editEvent = false;
         this.editJobVacancy = false;
-        this.acceptMembers = false;
-        //TODO remove acceptMembers
-        this.acceptMembers = false;
+        this.manageMembers = false;
         this.editAssociation = false;
     }
 
@@ -43,9 +41,8 @@ public class Member extends AuditModel {
         this.editPublication = false;
         this.editEvent = false;
         this.editJobVacancy = false;
-        this.acceptMembers = false;
         //TODO remove acceptMembers
-        this.acceptMembers = false;
+        this.manageMembers = false;
         this.editAssociation = false;
     }
 

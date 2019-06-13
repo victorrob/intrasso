@@ -6,6 +6,10 @@
 </head>
 <body>
 <div th:fragment="formPage(dataMap)">
+    <div class="custom-control custom-switch my-2 mx-auto">
+        <input type="checkbox" class="custom-control-input" name="published" id="published">
+        <label class="custom-control-label" for="published">Publié :</label>
+    </div>
     <label for="titleInput">Titre: </label><input id="titleInput" type="text" class="form-control" name="name" th:value="${dataMap.get('name')}"/>
     <label for="textareaInput">Description: </label><textarea class="form-control" name="content"
                                                               id="textareaInput" th:text="${dataMap.get('content')}"></textarea>

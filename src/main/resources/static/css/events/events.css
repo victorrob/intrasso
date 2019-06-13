@@ -27,11 +27,6 @@ h4{
     display: inline-block;
 }
 
-.card-title{
-    border-bottom: solid black .05rem;
-    padding: 1rem;
-}
-
 .cardGroup{
     width: 80%;
     margin: 1rem auto;

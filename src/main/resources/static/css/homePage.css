@@ -1,17 +1,8 @@
-.card{
-    padding: 0 1rem 1rem;
-    border: none !important;
-}
-
 .card .btn{
     width: fit-content;
     width: -moz-fit-content;
 }
-.bigCard{
-    background-color: white;
-    border-radius: .25rem;
-    margin: 1rem 0;
-}
+
 .cardFooter{
     display: flex;
     justify-content: space-between;
@@ -20,11 +11,6 @@
 
 .cardFooter div{
     display: inline-block;
-}
-
-.card-title{
-    border-bottom: solid black .05rem;
-    padding: 1rem;
 }
 
 .cardGroup{

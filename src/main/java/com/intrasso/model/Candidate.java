@@ -16,34 +16,34 @@ public class Candidate extends AuditModel {
 
     private String status;
 
-    public Candidate(){
+    public Candidate() {
         user = null;
         pageWithForm = null;
         status = "en attente";
     }
 
-    public Candidate(Form form, User user){
+    public Candidate(Form form, User user) {
         this.user = user;
         this.form = form;
+        form.setCandidate(this);
         this.pageWithForm = null;
+        status = "en attente";
 
     }
 
-    public void decline(){
+    public void decline() {
         status = "refusé";
-        pageWithForm.getCandidateList().remove(this);
     }
 
-    public void waiting(){
+    public void waiting() {
         status = "en attente";
     }
 
-    public  void accept(){
+    public void accept() {
         status = "accepté";
-        pageWithForm.getCandidateList().remove(this);
     }
 
-    public String getStatus(){
+    public String getStatus() {
         return this.status;
     }
 
@@ -69,5 +69,25 @@ public class Candidate extends AuditModel {
 
     public void setForm(Form form) {
         this.form = form;
+    }
+
+    @PreRemove
+    public void deleteCandidate() {
+        for(Candidate candidate : user.getCandidateList()){
+            if(candidate.getId().equals(this.getId())){
+                user.getCandidateList().remove(candidate);
+                break;
+            }
+        }
+        user = null;
+        for(Candidate candidate : pageWithForm.getCandidateList()){
+            if(candidate.getId().equals(this.getId())){
+                pageWithForm.getCandidateList().remove(candidate);
+                break;
+            }
+        }
+        pageWithForm = null;
+        form.setCandidate(null);
+        form = null;
     }
 }

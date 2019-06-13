@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageWithForm.getName()}"></title>
+</head>
+<body>
+<div th:replace="fragments/header"></div>
+<h1 th:text="${pageWithForm.getName()}" class="mx-auto"></h1>
+<div class="candidate w-75 mx-auto" th:each="candidate : ${candidateList}">
+    <div class="bigCard" th:id="${candidate.getId()}">
+        <h5 class="card-title"
+            th:text="${candidate.getUser().getFirstName() + ' ' + candidate.getUser().getLastName()}"></h5>
+        <div class="card d-flex justify-content-end flex-row">
+            <button id="deny" class="btn btn-danger mx-2 ajax-btn">Refuser</button>
+            <button id="accept" class="btn btn-success mx-2 ajax-btn">Accepter</button>
+            <a th:href="'form/' + ${candidate.getForm().getId()}" class="mx-2 btn btn-primary">En savoir plus</a>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/showCandidates.js}"></script>
+</body>
+</html>

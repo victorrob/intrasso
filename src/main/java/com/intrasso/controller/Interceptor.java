@@ -29,7 +29,7 @@ public class Interceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("interceptor");
+        System.out.println("interceptor : " + request.getMethod());
         System.out.println(request.getRequestURL());
         URL url = new URL(request.getRequestURL().toString());
         System.out.println(url.getPath());

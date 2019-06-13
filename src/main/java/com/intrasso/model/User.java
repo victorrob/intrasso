@@ -17,8 +17,7 @@ public class User extends AuditModel {
     private String email;
     @OneToMany(
             mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            cascade = CascadeType.ALL
     )
     private List<Candidate> candidateList;
     @OneToMany(
@@ -107,6 +106,14 @@ public class User extends AuditModel {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public List<Candidate> getCandidateList() {
+        return candidateList;
+    }
+
+    public void setCandidateList(List<Candidate> candidateList) {
+        this.candidateList = candidateList;
     }
 
     public void update(User user){

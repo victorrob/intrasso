@@ -13,8 +13,13 @@ public class Form extends AuditModel {
             fetch = FetchType.LAZY
     )
     private List<Field> fields;
-    @OneToOne
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
     private PageWithForm pageWithForm;
+    @OneToOne
+    private Candidate candidate;
 
     public Form() {
         fields = new ArrayList<>();
@@ -62,8 +67,17 @@ public class Form extends AuditModel {
             fields.add(new Field(
                     field.getType(),
                     request.getParameter(field.getInputId()),
-                    field.getInputId()
+                    field.getInputId(),
+                    field.getLabel()
             ));
         }
+    }
+
+    public Candidate getCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate;
     }
 }

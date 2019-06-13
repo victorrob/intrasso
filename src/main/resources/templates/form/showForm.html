@@ -7,9 +7,10 @@
 </head>
 <body>
 <div th:replace="fragments/header"></div>
+<h1 class="mx-auto" th:text="${title}"></h1>
 <form class="mx-auto my-3 w-75" th:action="'../setForm/' + ${form.getId()}" method="post">
 <div th:replace="fragments/formForPage :: getForm(${form})"></div>
-    <p><input class="my-2 form-control btn btn-primary" type="submit" value="Submit"/></p>
+    <p th:if="${editable}"><input class="my-2 form-control btn btn-primary" type="submit" value="Submit"/></p>
 </form>
 </body>
 </html>

@@ -17,7 +17,10 @@ public class Association extends Page {
             fetch = FetchType.LAZY
     )
     private List<Member> members;
-    @OneToMany
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private List<Form> savedForm;
     @OneToMany(
             mappedBy = "association",
@@ -53,11 +56,13 @@ public class Association extends Page {
         this.pageWithFormList = pageWithFormList;
     }
 
-    public List<PageWithForm> getByType(String type){
+    public List<PageWithForm> getByType(String type, boolean accessUnPublished){
         List<PageWithForm> pageWithForms = new ArrayList<>();
         for(PageWithForm pageWithForm : pageWithFormList){
             if(pageWithForm.getType().equals(type)){
-                pageWithForms.add(pageWithForm);
+                if(accessUnPublished || pageWithForm.isPublished()){
+                    pageWithForms.add(pageWithForm);
+                }
             }
         }
         return pageWithForms;

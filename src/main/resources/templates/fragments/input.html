@@ -7,8 +7,8 @@
 <body>
 <th:block th:fragment="input(type, id, value, text)">
     <label th:for="${id}" th:text="${text}"></label>
-    <input th:if="${type!='textArea'}" th:id="${id}" class="form-control" th:type="${type}" th:name="${id}" th:value="${value}">
-    <textarea th:if="${type == 'textArea'}" class="form-control" th:id="${id}" th:name="${id}" th:text="${value}"></textarea>
+    <input th:attr="disabled=${!editable}" th:if="${type!='textArea'}" th:id="${id}" class="form-control" th:type="${type}" th:name="${id}" th:value="${value}">
+    <textarea th:attr="disabled=${!editable}" th:if="${type == 'textArea'}" class="form-control" th:id="${id}" th:name="${id}" th:text="${value}"></textarea>
 </th:block>
 </body>
 </html>

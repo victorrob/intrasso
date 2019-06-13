@@ -5,8 +5,42 @@ body{
 .mx-auto{
     width: -moz-fit-content;
     width: fit-content;
+    display: block;
 }
 
 .card-group{
     background-color: white;
+}
+.card{
+    padding: 0 1rem 1rem;
+    border: none !important;
+}
+.bigCard{
+    background-color: white;
+    border-radius: .25rem;
+    margin: 1rem 0;
+}
+
+.circle-plus i{
+    font-size: 1.5rem;
+    padding: 0.4rem;
+    border: 0.15rem solid;
+    border-radius: 50%;
+}
+
+.custom-switch .custom-control-label::after{
+    top: calc(.33rem + 2px);
+    left: unset;
+    right: calc(-1.25rem + 2px);
+}
+
+.custom-switch .custom-control-label::before{
+    top: .35rem;
+    left: unset;
+    right: -2rem;
+}
+
+.card-title{
+    border-bottom: solid black .05rem;
+    padding: 1rem;
 }
