@@ -10,7 +10,7 @@
 <div th:replace="fragments/header"></div>
 <div id="dashboard" class="d-flex justify-content-around flex-wrap">
     <div th:if="${candidateList.size() != 0}" id="candidate" class="cardGroup">
-        <h4>Candidatures</h4>
+        <h4>Candidatures :</h4>
         <div class="bigCard" th:id="${candidate.getId()}" th:each="candidate: ${candidateList}">
             <h5 class="card-title" th:text="${candidate.getPageWithForm().getName()}"></h5>
             <div class="card">

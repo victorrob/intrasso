@@ -11,7 +11,7 @@
 <div th:replace="fragments/header"></div>
 <h1 class="mx-auto my-1">Créer une publication :</h1>
 <div class="formBlock mx-auto w-75">
-    <form th:action="'/association/'+ ${association.getId()} + '/editJobVacancy'" method="post">
+    <form th:action="'/association/'+ ${association.getId()} + '/editJobvacancy'" method="post">
         <div th:replace="fragments/formPageWithForm :: formPageWithForm(${jobvacancy.getAsMap()}, 'jobVacancy')"></div>
 
         <p><input class="form-control my-2 btn btn-primary" type="submit" value="Submit"/></p>

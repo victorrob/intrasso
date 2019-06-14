@@ -31,21 +31,19 @@ public class UserController {
         String password = request.getParameter("pswd");
         LDAPaccess ldaPaccess = new LDAPaccess();
         LDAPObject ldapObject = new LDAPObject();
-        //TODO update
-        //TODO difference between the students and the others.
-//        try {
-//            ldapObject = ldaPaccess.LDAPget(user, password);
-//            System.out.println("log successful");
-//        }
-//        catch (Exception e) {
-//            e.getCause();
-//            return "redirect:/";
-//        }
-        ldapObject.mail = "victor.robert@isep.fr";
-
-        if(user.equals("test")){
-            ldapObject.mail = "victorrobert@isep.fr";
+        try {
+            ldapObject = ldaPaccess.LDAPget(user, password);
+            System.out.println("log successful");
         }
+        catch (Exception e) {
+            e.getCause();
+            return "redirect:/";
+        }
+//        ldapObject.mail = "victor.robert@isep.fr";
+//
+//        if(user.equals("test")){
+//            ldapObject.mail = "victorrobert@isep.fr";
+//        }
         List<User> userList = userRepository.findByEmail(ldapObject.getEmail());
         User newUser;
         if (userList.isEmpty()) {
@@ -70,5 +68,10 @@ public class UserController {
         return "user/showUser";
     }
 
+    @GetMapping("/logout")
+    public String logOut(HttpServletRequest request){
+        request.getSession().removeAttribute("userId");
+        return "redirect:/";
+    }
 
 }

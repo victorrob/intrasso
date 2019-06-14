@@ -10,42 +10,34 @@
 <body>
 <div th:replace="fragments/header"></div>
 <h1 th:text="${association.name}"></h1>
+<a th:if="${currentMember.canEditAssociation()}" th:href="${association.getId()} + '/edit'" class="mx-auto btn btn-warning">Éditer</a>
 <p class="description" th:text="${association.content}"></p>
 <div id="dashboard" class="d-flex justify-content-around flex-wrap">
     <div id="events" class="cardGroup">
-        <h4>Événements : <a class="addLink" th:href="${association.getId()} + '/addEvent'"><i class="fas fa-plus"></i></a> </h4>
+        <h4>Événements : <a th:if="${currentMember.canEditEvent()}" class="addLink" th:href="${association.getId()} + '/addEvent'"><i class="fas fa-plus"></i></a> </h4>
         <div th:replace="fragments/showPage :: pageAll(${event}, 'Le ', 'event', 'dd/MM/yy à hh:mm')"></div>
     </div>
     <div id="publications" class="cardGroup">
-        <h4>Publications : <a class="addLink" th:href="${association.getId()} + '/addPublication'"><i class="fas fa-plus"></i></a></h4>
+        <h4>Publications : <a th:if="${currentMember.canEditPublication()}" class="addLink" th:href="${association.getId()} + '/addPublication'"><i class="fas fa-plus"></i></a></h4>
         <div th:replace="fragments/showPage :: pageAll(${publication}, 'Posté le ', 'publication', 'dd/MM/YY')"></div>
     </div>
     <div id="jobVacancies" class="cardGroup">
-        <h4>Postes vacants : <a class="addLink" th:href="${association.getId()} + '/addJobVacancy'"><i class="fas fa-plus"></i></a></h4>
+        <h4>Postes vacants : <a th:if="${currentMember.canEditJobVacancy()}" class="addLink" th:href="${association.getId()} + '/addJobVacancy'"><i class="fas fa-plus"></i></a></h4>
         <div th:replace="fragments/showPage :: pageAll(${jobvacancy}, 'Jusqu\'au ', 'jobVacancy', 'dd/MM/yy à hh:mm')"></div>
     </div>
     <div id="members" class="cardGroup">
-        <h4>Membres : <a class="addLink" th:href="${association.getId()} + '/addMember'"><i class="fas fa-plus"></i></a></h4>
+        <h4>Membres : <a th:if="${currentMember.canManageMembers()}" class="addLink" th:href="${association.getId()} + '/addMember'"><i class="fas fa-plus"></i></a></h4>
         <div class="bigCard" th:each="member: ${members}">
             <div class="card">
                 <h5 class="card-title" th:text="${member.getUser().getFirstName()} + '  ' + ${member.getUser().getLastName()} + ', rôle : '  + ${member.getRole()}"></h5>
                 <div class="cardFooter">
-                    <a class="btn btn-danger mr-auto" th:href="'/association/' + ${member.getAssociation().getId()} + '/deleteMember/' + ${member.getId()}">Supprimer</a>
-                    <a class="btn btn-primary ml-auto"
+                    <a th:if="${currentMember.canManageMembers()}" class="btn btn-danger mr-auto" th:href="'/association/' + ${member.getAssociation().getId()} + '/deleteMember/' + ${member.getId()}">Supprimer</a>
+                    <a th:if="${currentMember.canManageMembers()}" class="btn btn-primary ml-auto"
                        th:href="'/association/' + ${member.getAssociation().getId()} + '/editMember/' + ${member.getId()}">Éditer</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--<th:block th:if="${association.getMembers().size() > 0}">-->
-<!--    <P>Membres</P>-->
-<!--    <th:block th:each="member: ${association.getMembers()}">-->
-<!--        <p th:text="'Name: ' + ${member.getUser().getFirstName()}"></p>-->
-<!--        <p th:text="'Description: ' + ${member.getRole()}"></p>-->
-<!--        <a th:href="'editMember/' + ${member.getId()}">éditer un membre</a>-->
-<!--        <a th:href="'deleteMember/' + ${member.getId()}">Supprimer un membre</a>-->
-<!--    </th:block>-->
-<!--</th:block>-->
 </body>
 </html>

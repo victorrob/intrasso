@@ -5,3 +5,8 @@
 .navbar, .navbar-expand-md, .navbar-dark {
     margin-bottom: 50px;
 }
+
+.dropdown-menu.show{
+    right: 3rem;
+    left: unset;
+}

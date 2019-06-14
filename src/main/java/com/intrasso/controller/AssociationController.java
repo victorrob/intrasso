@@ -31,9 +31,9 @@ public class AssociationController {
     public String setAssociation(Model model) {
         System.out.println("show asso form");
         model.addAttribute("association", new Association());
+        model.addAttribute("action", "/addAssociation");
         return "association/addAssociation";
     }
-
 
     @PostMapping("/addAssociation")
     public String createAssociation(@ModelAttribute Association association, HttpServletRequest request) {
@@ -53,6 +53,21 @@ public class AssociationController {
         }
 
         return "";
+    }
+
+    @GetMapping("/association/{associationId:\\d+}/edit")
+    public String editAssociation(@PathVariable long associationId, Model model){
+        model.addAttribute("association", associationRepository.getOne(associationId));
+        model.addAttribute("action", "/association/" + associationId + "/edit");
+        return "association/addAssociation";
+    }
+
+    @PostMapping("/association/{associationId:\\d+}/edit")
+    public String updateAssociation(@PathVariable long associationId, HttpServletRequest request){
+        Association association = associationRepository.getOne(associationId);
+        association.update(request);
+        associationRepository.save(association);
+        return "redirect:/association/" + associationId;
     }
 
     @GetMapping("/associations")
@@ -77,6 +92,11 @@ public class AssociationController {
                 model.addAttribute(type, Util.getSome(Util.getObjects(associationRepository, type, associationId, userId), numberDisplayed, pageWithFormRepository));
             }
             model.addAttribute("members", association.getMembers());
+            Member member = Util.getMember(association, userId);
+            if(member == null){
+                member = new Member();
+            }
+            model.addAttribute("currentMember", member);
             return "association/showAssociation";
         }
         System.out.println("association not found");
@@ -142,7 +162,7 @@ public class AssociationController {
         return "association/showCandidates";
     }
 
-    @PostMapping("/association/{associationId:\\d+}/{type:(?:event|publication|jobVacancy)}/{objectId:\\d+}/candidate/{candidateId:\\d+}/{choice:(?:accept|deny|dismiss|delete)}")
+    @PostMapping("/association/{associationId:\\d+}/{type:(?:event|publication|jobvacancy)}/{objectId:\\d+}/candidate/{candidateId:\\d+}/{choice:(?:accept|deny|dismiss|delete)}")
     public @ResponseBody int manageCandidates(@PathVariable long associationId, @PathVariable String type, @PathVariable String choice, @PathVariable long candidateId, HttpServletRequest request){
         System.out.println("value : " + choice);
         Association association = associationRepository.getOne(associationId);

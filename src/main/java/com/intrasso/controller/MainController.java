@@ -115,7 +115,7 @@ public class MainController {
         return "user/homePage";
     }
 
-    @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d++}/form/{formId:\\d+}/{end:(?:show|edit)}")
+    @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobvacancy}/{objectId:\\d++}/form/{formId:\\d+}/{end:(?:show|edit)}")
     public String showEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long objectId, @PathVariable long formId, @PathVariable String end, Model model, HttpServletRequest request) {
         model.addAttribute("associationId", associationId);
         model.addAttribute("type", type);
@@ -144,7 +144,7 @@ public class MainController {
         return "form/showForm";
     }
 
-    @PostMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}/{objectId:\\d++}/setForm/{formId:\\d+}")
+    @PostMapping("/association/{associationId:\\d+}/{type:event|publication|jobvacancy}/{objectId:\\d++}/setForm/{formId:\\d+}")
     public String editEvent(@PathVariable long associationId, @PathVariable String type, @PathVariable long formId, HttpServletRequest request) {
         Form form = formRepository.getOne(formId);
         if (form.getCandidate() != null && form.getCandidate().getUser().getId().equals(request.getSession().getAttribute("userId"))) {

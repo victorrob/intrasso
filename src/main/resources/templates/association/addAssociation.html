@@ -8,8 +8,8 @@
 <div th:replace="fragments/header"> </div>
 <h1 class="mx-auto my-1">Créer mon association</h1>
 <div class="formBlock mx-auto w-75">
-    <form th:action="'/addAssociation'" method="post">
-        <div th:replace="fragments/formPage :: formPage(${association.getAsMap()}, false)"></div>
+    <form th:action="${action}" method="post">
+        <div th:replace="fragments/formPage :: formPage(${association.getAsMap()})"></div>
 
         <input class="btn btn-primary my-2" type="submit" value="Submit"/>
     </form>

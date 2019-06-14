@@ -10,6 +10,7 @@ $(".ajax-btn").click(function (e) {
     else {
         postUrl = $(this).attr("href");
     }
+    console.log(postUrl);
     $.ajax({
         url : postUrl,
         method: "POST",

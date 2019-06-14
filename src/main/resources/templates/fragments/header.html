@@ -22,20 +22,20 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item col-6 col-md-5 text-md-center">
+        <ul class="navbar-nav d-flex justify-content-around w-100">
+            <li class="nav-item text-md-center">
                 <a class="nav-link" href="/associations">Associations</a>
             </li>
-            <li class="nav-item col-6 col-md-5 text-md-center">
+            <li class="nav-item text-md-center">
                 <a class="nav-link" href="/event">Événements</a>
             </li>
-            <li class="nav-item col-6 col-md-5 text-md-center">
+            <li class="nav-item text-md-center">
                 <a class="nav-link" href="/publication">Publications</a>
             </li>
-            <li class="nav-item col-6 col-md-5 text-md-center">
+            <li class="nav-item text-md-center">
                 <a class="nav-link" href="/jobVacancy">Postes vacants</a>
             </li>
-            <li class="nav-item col-6 col-md-5 text-md-center">
+            <li class="nav-item text-md-center">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                    aria-haspopup="true"
                    aria-expanded="false" th:text="${#request.getSession().getAttribute('userName')}"></a>
@@ -44,6 +44,7 @@
                         <a class="dropdown-item" th:href="'/association/' + ${association.value}" th:text="${association.key}"></a>
                     </th:block>
                     <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout">Déconnexion</a>
                     <a class="dropdown-item" href="/user">Profile</a>
                 </div>
             </li>

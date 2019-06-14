@@ -9,7 +9,7 @@
 <h1 class="mx-auto my-2 w-75" style="width: -moz-fit-content" th:text="${jobVacancy.getName()} + ' - ' + ${jobVacancy.getRole()}"></h1>
 <div th:if="${member != null}" class="d-flex justify-content-center mx-auto my-2">
     <a th:if="${member.canEditJobVacancy()}" class="my-2 mx-2 btn btn-warning"
-       th:href="'../editJobVacancy/' + ${jobVacancy.getId()}">Éditer</a>
+       th:href="'../editJobvacancy/' + ${jobVacancy.getId()}">Éditer</a>
     <a th:if="${member.canManageMembers() && jobVacancy.hasForm()}" class="my-2 mx-2 btn btn-success"
        th:href="${jobVacancy.getId()} + '/showCandidates'">Voir les candidatures</a>
 </div>
@@ -17,7 +17,7 @@
     <p th:utext="${#strings.unescapeJava(#strings.replace(#strings.escapeJava(jobVacancy.getContent()),'\n','&lt;br /&gt;'))}">
     <p th:text="'Jusqu\'au '+ ${jobVacancy.getEndDateString('dd/MM/yy à hh:mm')}"></p>
 </div>
-<a th:if="${jobVacancy.hasForm()}" th:href="${jobVacancy.getId()} + '/form/' + ${jobVacancy.getForm().getId() + '/edit'}" class="mx-auto btn btn-primary">Remplir le
+<a th:if="${jobVacancy.hasForm()}" th:href="'../jobvacancy/' + ${jobVacancy.getId()} + '/form/' + ${jobVacancy.getForm().getId() + '/edit'}" class="mx-auto btn btn-primary">Remplir le
     formulaire</a>
 </body>
 </html>
