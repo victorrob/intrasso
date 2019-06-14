@@ -3,6 +3,7 @@
     margin: 1rem auto;
     border-radius: 1rem;
     padding: 0.8rem;
+    max-width: 80%;
 }
 
 .formBlock img{

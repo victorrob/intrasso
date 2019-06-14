@@ -10,8 +10,8 @@
         <input type="checkbox" th:attr="checked=${dataMap.get('published').equals('1')}" class="custom-control-input" name="published" id="published">
         <label class="custom-control-label" for="published">Publié :</label>
     </div>
-    <label for="titleInput">Titre: </label><input id="titleInput" type="text" class="form-control" name="name" th:value="${dataMap.get('name')}"/>
-    <label for="textareaInput">Description: </label><textarea class="form-control" name="content"
+    <label for="titleInput">Titre: </label><input required id="titleInput" type="text" class="form-control" name="name" th:value="${dataMap.get('name')}"/>
+    <label for="textareaInput">Description: </label><textarea required class="form-control" name="content"
                                                               id="textareaInput" th:text="${dataMap.get('content')}"></textarea>
 </div>
 </body>

@@ -38,6 +38,13 @@ public abstract class Page extends AuditModel {
         return content.substring(0, size) + ((size != content.length()) ? "..." : "");
     }
 
+    public String getContentAsHtml(){
+        System.out.println("content : " + content.replace("\\n", "<br/>\\n"));
+        System.out.println("content : " + content.replace("\n", "<br/>"));
+        System.out.println("line separator : " + System.lineSeparator());
+        return content.replace("\\n", "<br/>\\n");
+    }
+
     public Map<String, String> getAsMap(){
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("name", this.name);

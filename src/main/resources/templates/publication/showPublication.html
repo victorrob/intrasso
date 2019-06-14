@@ -14,7 +14,7 @@
        th:href="${publication.getId()} + '/showCandidates'">Voir les candidatures</a>
 </div>
 <div class="w-75 mx-auto">
-    <p th:text="${publication.getContent()}"></p>
+    <p th:utext="${#strings.unescapeJava(#strings.replace(#strings.escapeJava(publication.getContent()),'\n','&lt;br /&gt;'))}">
     <p th:text="'Posté le ' + ${publication.getEndDateString('dd/MM/yy')}"></p>
 </div>
 <a th:if="${publication.hasForm()}" th:href="${publication.getId()} + '/form/' + ${publication.getForm().getId() + '/edit'}" class="mx-auto btn btn-primary">Remplir le

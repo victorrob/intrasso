@@ -5,9 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-<th:block th:fragment="addForm">
-    <div id="allChoices">
-        <div id="fieldsChoice">
+<th:block th:fragment="addForm(formMap)">
+    <div id="allChoices" class="d-flex flex-column">
+        <div id="fieldsChoice-0">
             <label for="inputName-0">Label du champ</label>
             <input class="form-control" type="text" name="inputName-0" id="inputName-0">
 
@@ -38,6 +38,11 @@
         </div>
     </div>
     <div id="addFormSelection" class="circle-plus mx-auto my-2"><i class="fas fa-plus"></i></div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var formMap = /*[[${formMap}]]*/ "";
+        /*]]>*/
+    </script>
     <script th:src="@{/js/addForm.js}"></script>
 
 </th:block>

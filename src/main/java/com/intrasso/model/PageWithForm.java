@@ -54,8 +54,8 @@ public class PageWithForm extends Page {
     }
 
     public PageWithForm(HttpServletRequest request, String type) {
-        update(request);
         this.type = type;
+        update(request);
     }
 
     public Form getForm() {
@@ -63,7 +63,7 @@ public class PageWithForm extends Page {
     }
 
     public void setForm(Form form) {
-        if (!hasForm) {
+        if (hasForm) {
             this.form = form;
             form.setPageWithForm(this);
         }
@@ -89,7 +89,10 @@ public class PageWithForm extends Page {
         dataMap.put("endDate", date.format(endDate));
         dataMap.put("published", ((published) ? "1" : "0"));
         dataMap.put("hasForm", ((hasForm) ? "1" : "0"));
-
+        dataMap.put("role", role);
+        if(form != null){
+            dataMap.put("formMap", form.getAsMap());
+        }
         return dataMap;
     }
 
@@ -126,18 +129,16 @@ public class PageWithForm extends Page {
         else {
             endDate = new Date();
         }
-        System.out.println(request.getParameter("published"));
+        if(request.getParameter("role") != null){
+            role = request.getParameter("role");
+        }
         published = request.getParameter("published") != null;
-        System.out.println(published);
-        hasForm = request.getParameter("hasForm") != null;
+        hasForm = request.getParameter("hasForm") != null || type.equals("jobvacancy");
         if(!hasForm){
             form = null;
         }
         else if(form != null) {
             form.update(request);
-        }
-        else {
-            form = new Form(request);
         }
     }
 

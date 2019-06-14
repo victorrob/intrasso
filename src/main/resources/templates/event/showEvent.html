@@ -14,7 +14,7 @@
        th:href="${event.getId()} + '/showCandidates'">Voir les candidatures</a>
 </div>
 <div class="w-75 mx-auto">
-    <p th:text="${event.getContent()}"></p>
+    <p th:utext="${#strings.unescapeJava(#strings.replace(#strings.escapeJava(event.getContent()),'\n','&lt;br /&gt;'))}"></p>
     <p th:text="'Finis le ' + ${event.getEndDateString('dd/MM/yy à hh:mm')}"></p>
 </div>
 <a th:if="${event.hasForm()}" th:href="${event.getId()} + '/form/' + ${event.getForm().getId() + '/edit'}" class="mx-auto btn btn-primary">Remplir le

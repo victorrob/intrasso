@@ -33,14 +33,14 @@ public class MainController {
 
     @GetMapping("/{type:event|publication|jobVacancy}")
     public String showAll(@PathVariable String type, Model model, HttpServletRequest request) {
-        Queue<PageWithForm> queue = Util.getObjects(associationRepository, type, (Long) request.getSession().getAttribute("userId"));
+        Queue<PageWithForm> queue = Util.getObjects(associationRepository, type.toLowerCase(), (Long) request.getSession().getAttribute("userId"));
         model.addAttribute(type, queue);
         return type + "/" + type;
     }
 
     @GetMapping("/association/{associationId:\\d+}/{type:event|publication|jobVacancy}")
     public String showObjects(@PathVariable long associationId, @PathVariable String type, Model model) {
-        model.addAttribute(type, Util.getObjects(associationRepository, type, associationId));
+        model.addAttribute(type, Util.getObjects(associationRepository, type.toLowerCase(), associationId));
         model.addAttribute("association", associationRepository.getOne(associationId));
         return type + "/" + type;
     }

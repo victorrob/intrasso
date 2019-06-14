@@ -1,9 +1,13 @@
 package com.intrasso.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "form")
@@ -75,6 +79,25 @@ public class Form extends AuditModel {
         }
     }
 
+    public String getAsMap(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Map<String, String>> stringMapMap = new HashMap<>();
+        for(Field field : fields){
+            Map<String, String> stringMap = new HashMap<>();
+            stringMap.put("inputValue", field.getLabel());
+            stringMap.put("optionValue", field.getType());
+            stringMapMap.put(field.getInputId(), stringMap);
+
+
+        }
+        try {
+            return objectMapper.writeValueAsString(stringMapMap);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return "";
+        }
+    }
     public Candidate getCandidate() {
         return candidate;
     }

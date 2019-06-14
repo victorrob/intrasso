@@ -9,10 +9,10 @@
     <div th:replace="fragments/formPage:: formPage(${dataMap})"></div>
     <div th:if="${type.equals('jobVacancy')}">
         <label for="role">Rôle :</label>
-        <input class="form-control" name="role" id="role" type="text" th:value="${dataMap.get('role')}">
+        <input required class="form-control" name="role" id="role" type="text" th:value="${dataMap.get('role')}">
     </div>
     <div th:if="${!type.equals('publication')}">
-        <label>Date de fin : <input class="form-control" th:min="${dataMap.get('endDate')}" type="date"
+        <label>Date de fin : <input required class="form-control" th:min="${dataMap.get('endDate')}" type="date"
                                     name="endDateString" id="endDate" th:value="${dataMap.get('endDate')}"></label>
     </div>
     <div th:if="${!type.equals('publication')}">
@@ -22,9 +22,9 @@
             <label class="custom-control-label" for="hasForm">Formulaire :</label>
         </div>
         <div th:class="'formVisible ' + ((${dataMap.get('hasForm').equals('0')}) ? 'hidden' : '')">
-            <div th:replace="fragments/addForm :: addForm"></div>
+            <div th:replace="fragments/addForm :: addForm(${dataMap.get('formMap')})"></div>
         </div>
     </div>
 </div>
 </body>
-</html>
+</html>x
